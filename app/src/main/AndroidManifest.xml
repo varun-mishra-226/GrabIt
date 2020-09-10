@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.grabit">
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".EmployeeFitnessTrack"></activity>
+        <activity android:name=".EmployeePastOrder" />
+        <activity android:name=".EmployeeTodayOrder" />
+        <activity android:name=".EmployeeHome" />
+        <activity android:name=".EmployeeProfile" />
+        <activity android:name=".EmployeeLogin" />
+        <activity android:name=".CustomerProfile" />
+        <activity android:name=".CustomerTodayOrder" />
+        <activity android:name=".CustomerPastOrder" />
+        <activity android:name=".CustomerChosenCanteen" />
+        <activity android:name=".CustomerHome" />
+        <activity android:name=".CustomerRegister" />
+        <activity android:name=".CutomerLogin" />
+        <activity android:name=".InitialLogin">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>
