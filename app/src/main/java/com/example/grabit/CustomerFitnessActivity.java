@@ -4,11 +4,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
-public class EmployeeFitnessTrack extends AppCompatActivity {
+public class CustomerFitnessActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_employee_fitness_track);
+        setContentView(R.layout.activity_customer_fitness);
     }
 }

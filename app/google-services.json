@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "597811225733",
+    "firebase_url": "https://hci-project-c0c69.firebaseio.com",
+    "project_id": "hci-project-c0c69",
+    "storage_bucket": "hci-project-c0c69.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:597811225733:android:e1623ca703700598cdb5ec",
+        "android_client_info": {
+          "package_name": "com.example.grabit"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "597811225733-gjb01odblnkv5go1627qpd17u8jsdtqg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBWCKHNbLCCsnbVTa837apKFXXVNxbTA4A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "597811225733-gjb01odblnkv5go1627qpd17u8jsdtqg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

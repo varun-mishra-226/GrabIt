@@ -17,17 +17,16 @@
 
         <ImageView
             android:id="@+id/ivUser"
-            android:layout_width="wrap_content"
+            android:layout_width="50dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            app:srcCompat="@android:drawable/btn_star_big_on" />
+            app:srcCompat="@drawable/user_icon" />
 
         <TextView
             android:id="@+id/tvUserDetails"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="TextView" />
+            android:layout_weight="1" />
 
         <Button
             android:id="@+id/btnProfile"
