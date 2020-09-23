@@ -4,14 +4,16 @@ public class Customer {
     public String name;
     public String regNo;
     public String password;
+    public int wallet;
 
     public Customer(){
     }
 
-    public Customer(String name, String regNo, String password) {
+    public Customer(String name, String regNo, String password, int wallet) {
         this.name = name;
         this.regNo = regNo;
         this.password = password;
+        this.wallet = wallet;
     }
 
     public String getName() {
@@ -36,5 +38,13 @@ public class Customer {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public int getWallet() {
+        return wallet;
+    }
+
+    public void setWallet(int wallet) {
+        this.wallet = wallet;
     }
 }

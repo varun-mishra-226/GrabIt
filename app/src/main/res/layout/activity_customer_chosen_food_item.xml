@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rvMenu"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".CustomerHome">
+    tools:context=".CustomerChosenCanteen">
 
     <LinearLayout
         android:id="@+id/HeaderTab"
@@ -47,19 +47,41 @@
             android:layout_marginRight="10dp"
             android:layout_weight="1"
             android:text="Logout" />
+
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/Canteen"
+        android:id="@+id/ChosenFood"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="5"
         android:orientation="vertical">
 
-        <ListView
-            android:id="@+id/lvCanteen"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/ivFoodImage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_launcher_foreground" />
+
+            <TextView
+                android:id="@+id/tvFoodDetails"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <EditText
+                android:id="@+id/etQuantity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="Enter Quantity"
+                android:inputType="number" />
+        </LinearLayout>
+
     </LinearLayout>
 
     <LinearLayout
@@ -70,23 +92,13 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/btnTodayOrder"
+            android:id="@+id/btnContinue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_margin="10dp"
             android:layout_weight="1"
-            android:text="View Today's Orders" />
-
-        <Button
-            android:id="@+id/btnOrderHistory"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_margin="10dp"
-            android:layout_weight="1"
-            android:text="Order History" />
+            android:text="Continue" />
     </LinearLayout>
 
 </LinearLayout>
-
