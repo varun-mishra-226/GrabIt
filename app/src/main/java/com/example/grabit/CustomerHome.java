@@ -27,7 +27,7 @@ import java.util.List;
 public class CustomerHome extends AppCompatActivity {
 
     TextView tvUserDetails;
-    Button btnProfile, btnLogout, btnTodayOrder, btnOrderHistory;
+    Button btnProfile, btnLogout, btnTodayOrder, btnFitnessTracker;
     DatabaseReference mDatabaseCustomer, mDatabaseCanteen;
     FirebaseDatabase database;
     List<String> canteen = new ArrayList<>();
@@ -40,7 +40,7 @@ public class CustomerHome extends AppCompatActivity {
 
         tvUserDetails = (TextView) findViewById(R.id.tvUserDetails);
         btnLogout = (Button) findViewById(R.id.btnLogout);
-        btnOrderHistory = (Button) findViewById(R.id.btnOrderHistory);
+        btnFitnessTracker = (Button) findViewById(R.id.btnFitnessTracker);
         btnTodayOrder = (Button) findViewById(R.id.btnTodayOrder);
         btnProfile = (Button) findViewById(R.id.btnProfile);
         database = FirebaseDatabase.getInstance();
@@ -124,10 +124,10 @@ public class CustomerHome extends AppCompatActivity {
             }
         });
 
-        btnOrderHistory.setOnClickListener(new View.OnClickListener() {
+        btnFitnessTracker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent1 = new Intent(CustomerHome.this, CustomerPastOrder.class);
+                Intent intent1 = new Intent(CustomerHome.this, CustomerStepCount.class);
                 intent1.putExtra("Username", username);
                 startActivity(intent1);
             }

@@ -1,6 +1,7 @@
 package com.example.grabit;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -20,7 +21,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 
 public class CustomerChosenCanteen extends AppCompatActivity {
 
@@ -30,6 +33,7 @@ public class CustomerChosenCanteen extends AppCompatActivity {
     FirebaseDatabase database;
     List<FoodItem> menu = new ArrayList<>();
     ListView lvMenu;
+    Hashtable<String, Integer> hm = new Hashtable<String, Integer>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,10 +94,10 @@ public class CustomerChosenCanteen extends AppCompatActivity {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         Intent intent1 = new Intent(CustomerChosenCanteen.this, CustomerChosenFoodItem.class);
-                        intent1.putExtra("username", username);
+                        intent1.putExtra("Username", username);
                         intent1.putExtra("chosenCanteen", chosenCanteen);
                         intent1.putExtra("chosenItem", menu.get(position).getName());
-                        startActivityForResult(intent1, );
+                        startActivityForResult(intent1, 1);
                     }
                 });
             }
@@ -116,9 +120,8 @@ public class CustomerChosenCanteen extends AppCompatActivity {
         btnContinue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                for (int i=0; i<menu.size(); i++){
-
-                }
+                for (Map.Entry<String, Integer> entry : hm.entrySet())
+                    Log.i("HashTable" , entry.getKey() + entry.getValue());
             }
         });
 
@@ -139,5 +142,13 @@ public class CustomerChosenCanteen extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode==1){
+            hm.put(data.getStringExtra("chosenItem"), Integer.parseInt(data.getStringExtra("Quantity")));
+        }
     }
 }

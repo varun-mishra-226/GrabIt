@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -61,7 +63,53 @@ public class CustomerChosenFoodItem extends AppCompatActivity {
 
             }
         });
+        mDatabaseCanteen = database.getReference("/Canteen/" + chosenCanteen + "/Menu");
 
-        mDatabaseCanteen = database.getReference("/Canteen/" + chosenCanteen + "/Menu" + chosenItem);
+        mDatabaseCanteen.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                FoodItem foodItem = snapshot.child(chosenItem).getValue(FoodItem.class);
+                int fat = foodItem.getFat();
+                int protein = foodItem.getProtein();
+                int carbohydrate = foodItem.getCarbohydrate();
+                int calorie = foodItem.getCalorie();
+                int price = foodItem.getPrice();
+                String name = foodItem.getName();
+
+                Log.i("Food Item Info.", name + String.valueOf(calorie));
+
+                tvFoodDetails.setText("Calories: " + calorie +
+                        "\nCarbohydrates: " + carbohydrate +
+                        "\nFats: " + fat +
+                        "\nProtein: " + protein +
+                        "\nCost: " + price);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        btnContinue.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent1 = new Intent();
+
+                if (etQuantity.getText().toString().isEmpty()){
+                    String quantity = "0";
+                    intent1.putExtra("Quantity", quantity);
+                    intent1.putExtra("chosenItem", chosenItem);
+                }
+                else{
+                    String quantity = etQuantity.getText().toString();
+                    intent1.putExtra("Quantity", quantity);
+                    intent1.putExtra("chosenItem", chosenItem);
+                }
+
+                setResult(1, intent1);
+                finish();
+            }
+        });
     }
 }

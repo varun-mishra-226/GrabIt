@@ -79,13 +79,14 @@
             android:text="View Today's Orders" />
 
         <Button
-            android:id="@+id/btnOrderHistory"
+            android:id="@+id/btnFitnessTracker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_margin="10dp"
             android:layout_weight="1"
-            android:text="Order History" />
+            android:text="Step Count" />
+
     </LinearLayout>
 
 </LinearLayout>

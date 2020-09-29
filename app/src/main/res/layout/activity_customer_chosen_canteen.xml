@@ -80,15 +80,6 @@
                 android:text="Item Name" />
 
             <TextView
-                android:id="@+id/tvCalorieHead"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="2"
-                android:gravity="center_horizontal"
-                android:text="Calorie Count" />
-
-            <TextView
                 android:id="@+id/tvPriceHead"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -98,15 +89,12 @@
                 android:text="Price" />
 
             <TextView
-                android:id="@+id/etQuantityHead"
-                android:layout_width="0dp"
+                android:id="@+id/tvCalorie"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="0.5"
-                android:ems="10"
+                android:layout_weight="1"
                 android:gravity="center_horizontal"
-                android:inputType="number"
-                android:text="Qty" />
+                android:text="Calories" />
 
         </LinearLayout>
 
