@@ -6,17 +6,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class FoodItemListAdapter extends ArrayAdapter<FoodItem> {
+public class FoodItemListAdapter extends ArrayAdapter<FoodItem> implements Filterable {
     Context context;
     int resource;
     List<FoodItem> menuList;
+
+    ItemSearchFilter filter;
+
+    List<FoodItem> filteredList;
 
     public FoodItemListAdapter(Context context, int resource, List<FoodItem> menuList){
         super(context, resource, menuList);
@@ -24,6 +31,7 @@ public class FoodItemListAdapter extends ArrayAdapter<FoodItem> {
         this.context = context;
         this.resource = resource;
         this.menuList = menuList;
+        this.filteredList = menuList;
     }
 
     @NonNull
@@ -43,5 +51,14 @@ public class FoodItemListAdapter extends ArrayAdapter<FoodItem> {
         tvCalorie.setText(String.valueOf(foodItem.getCalorie()));
 
         return view;
+    }
+
+    @NonNull
+    @Override
+    public Filter getFilter() {
+        if (filter==null){
+            filter = new ItemSearchFilter((ArrayList<FoodItem>) filteredList, this);
+        }
+        return filter;
     }
 }

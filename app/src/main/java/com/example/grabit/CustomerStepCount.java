@@ -1,8 +1,10 @@
 package com.example.grabit;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -10,16 +12,27 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class CustomerStepCount extends AppCompatActivity implements SensorEventListener {
 
     SensorManager sensorManager;
-    TextView tvStepCount;
+    TextView tvStepCount, tvUserDetails;
     Sensor sensor;
     double magnitudePrevious = 0;
     Integer stepCount = 0;
+    Button btnProfile, btnHome, btnLogout;
+    DatabaseReference mDatabaseCustomer, mDatabaseCanteen;
+    FirebaseDatabase database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,8 +40,59 @@ public class CustomerStepCount extends AppCompatActivity implements SensorEventL
         setContentView(R.layout.activity_customer_step_count);
 
         tvStepCount = (TextView) findViewById(R.id.tvStepCount);
+        tvUserDetails = (TextView) findViewById(R.id.tvUserDetails);
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        btnHome = (Button) findViewById(R.id.btnHome);
+        btnProfile = (Button) findViewById(R.id.btnProfile);
+        btnLogout = (Button) findViewById(R.id.btnLogout);
+        database = FirebaseDatabase.getInstance();
+        mDatabaseCustomer = database.getReference("Customer");
+
+        Intent intent = getIntent();
+        final String username = intent.getStringExtra("Username");
+
+        mDatabaseCustomer.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Customer customer = snapshot.child(username).getValue(Customer.class);
+                String name = customer.getName();
+                String reg = customer.getRegNo();
+                int wallet = customer.getWallet();
+                tvUserDetails.setText(name + "\n" + reg + "\nWallet: " + wallet);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        btnHome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent1 = new Intent(CustomerStepCount.this, CustomerHome.class);
+                intent1.putExtra("Username", username);
+                startActivity(intent1);
+            }
+        });
+
+        btnProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent1 = new Intent(CustomerStepCount.this, CustomerProfile.class);
+                startActivity(intent1);
+            }
+        });
+
+        btnLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent1 = new Intent(CustomerStepCount.this, CutomerLogin.class);
+                startActivity(intent1);
+                finish();
+            }
+        });
 
         Log.i("Step Counter Running", "Step Counter Activity");
 
