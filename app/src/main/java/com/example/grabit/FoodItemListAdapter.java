@@ -22,7 +22,6 @@ public class FoodItemListAdapter extends ArrayAdapter<FoodItem> implements Filte
     List<FoodItem> menuList;
 
     ItemSearchFilter filter;
-
     List<FoodItem> filteredList;
 
     public FoodItemListAdapter(Context context, int resource, List<FoodItem> menuList){

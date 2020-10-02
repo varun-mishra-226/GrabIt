@@ -28,7 +28,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Locale;
@@ -39,7 +41,7 @@ public class CustomerChosenCanteen extends AppCompatActivity {
     private static final int REQUEST_CODE_SPEECH_INPUT = 1000;
     TextView tvUserDetails, tvCart;
     Button btnProfile, btnLogout, btnGoBack, btnContinue;
-    DatabaseReference mDatabaseCustomer, mDatabaseCanteen;
+    DatabaseReference mDatabaseCustomer, mDatabaseCanteen, mDatabaseOrder;
     FirebaseDatabase database;
     List<FoodItem> menu = new ArrayList<>();
     ListView lvMenu;
@@ -47,6 +49,8 @@ public class CustomerChosenCanteen extends AppCompatActivity {
     ImageButton btnMic;
     FoodItemListAdapter foodItemListAdapter;
     SearchView searchView;
+    Calendar calendar;
+    String timeStamp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +64,7 @@ public class CustomerChosenCanteen extends AppCompatActivity {
         btnProfile = (Button) findViewById(R.id.btnProfile);
         database = FirebaseDatabase.getInstance();
         mDatabaseCustomer = database.getReference("Customer");
+        mDatabaseOrder = database.getReference("Order");
         lvMenu = (ListView) findViewById(R.id.lvMenu);
         btnMic = (ImageButton) findViewById(R.id.btnMic);
         searchView = (SearchView) findViewById(R.id.svMenu);
@@ -103,7 +108,8 @@ public class CustomerChosenCanteen extends AppCompatActivity {
                     Log.i("Menu Calorie Name", String.valueOf(menu.get(i).getCalorie()));
                 }
 
-                foodItemListAdapter = new FoodItemListAdapter(CustomerChosenCanteen.this, R.layout.menu_food_item, menu);
+                foodItemListAdapter = new FoodItemListAdapter(CustomerChosenCanteen.this,
+                        R.layout.menu_food_item, menu);
                 lvMenu.setAdapter(foodItemListAdapter);
                 lvMenu.setTextFilterEnabled(true);
 
@@ -152,6 +158,21 @@ public class CustomerChosenCanteen extends AppCompatActivity {
             public void onClick(View v) {
                 for (Map.Entry<String, Integer> entry : hm.entrySet())
                     Log.i("HashTable" , entry.getKey() + entry.getValue());
+
+                calendar = Calendar.getInstance();
+                Log.i("Time:", String.valueOf(calendar.getTimeInMillis()));
+
+                int i=1;
+                for (Map.Entry<String, Integer> entry : hm.entrySet()){
+                    if (entry.getValue()>0){
+                        mDatabaseOrder.child(username).child(String.valueOf(calendar.getTimeInMillis())).child("Item"+i).child("orderItem").setValue(entry.getKey());
+                        mDatabaseOrder.child(username).child(String.valueOf(calendar.getTimeInMillis())).child("Item"+i).child("orderQuantity").setValue(entry.getValue());
+                        i++;
+                    }
+                }
+
+                hm.clear();
+                tvCart.setText("");
             }
         });
 

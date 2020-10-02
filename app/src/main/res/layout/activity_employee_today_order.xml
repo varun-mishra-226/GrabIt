@@ -54,7 +54,13 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="5"
-        android:orientation="vertical"></LinearLayout>
+        android:orientation="vertical">
+
+        <ListView
+            android:id="@+id/lvOrders"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/Navigation"

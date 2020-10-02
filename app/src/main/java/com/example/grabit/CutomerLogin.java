@@ -62,9 +62,20 @@ public class CutomerLogin extends AppCompatActivity {
                     Log.i("Email Search", "Entered Email Found");
                     Customer customer = snapshot.child(username).getValue(Customer.class);
                     if (customer.getPassword().equals(password)){
-                        Intent intent = new Intent(CutomerLogin.this, CustomerHome.class);
+                        Intent intent = new Intent(CutomerLogin.this, CustomerWelcomeActivity.class);
                         intent.putExtra("Username", username);
                         startActivity(intent);
+
+                        if (snapshot.child(username).child("calorieTarget").exists()){
+                            Intent intent1 = new Intent(CutomerLogin.this, CustomerHome.class);
+                            intent1.putExtra("Username", username);
+                            startActivity(intent1);
+                        }
+                        else{
+                            Intent intent1 = new Intent(CutomerLogin.this, CustomerWelcomeActivity.class);
+                            intent1.putExtra("Username", username);
+                            startActivity(intent1);
+                        }
                     }
                     else {
                         Toast.makeText(CutomerLogin.this, "Wrong Password!!",
