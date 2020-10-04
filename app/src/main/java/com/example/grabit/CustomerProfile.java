@@ -41,17 +41,23 @@ public class CustomerProfile extends AppCompatActivity {
         final Intent intent = getIntent();
         final String username = intent.getStringExtra("Username");
 
+
+
         btnHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent1 = new Intent(CustomerProfile.this, CustomerHome.class);
+                intent1.putExtra("Username", username);
+                startActivity(intent1);
             }
         });
 
         btnLogOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent1 = new Intent(CustomerProfile.this, CutomerLogin.class);
+                startActivity(intent1);
+                finish();
             }
         });
 
