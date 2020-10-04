@@ -46,11 +46,14 @@ public class CustomerChosenCanteen extends AppCompatActivity {
     List<FoodItem> menu = new ArrayList<>();
     ListView lvMenu;
     Hashtable<String, Integer> hm = new Hashtable<String, Integer>();
+    Hashtable<String, Integer> itemPrice = new Hashtable<String, Integer>();
     ImageButton btnMic;
     FoodItemListAdapter foodItemListAdapter;
     SearchView searchView;
     Calendar calendar;
     String timeStamp;
+    int totalBill=0;
+    int wallet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +85,7 @@ public class CustomerChosenCanteen extends AppCompatActivity {
                 Customer customer = snapshot.child(username).getValue(Customer.class);
                 String name = customer.getName();
                 String reg = customer.getRegNo();
-                int wallet = customer.getWallet();
+                wallet = customer.getWallet();
                 tvUserDetails.setText(name + "\n" + reg + "\nWallet: " + wallet);
             }
 
@@ -100,6 +103,7 @@ public class CustomerChosenCanteen extends AppCompatActivity {
                 for (DataSnapshot keyNode : snapshot.getChildren()){
                     keys.add(keyNode.getKey());
                     FoodItem foodItem = keyNode.getValue(FoodItem.class);
+                    itemPrice.put(foodItem.getName(), foodItem.getPrice());
                     menu.add(foodItem);
                 }
 
@@ -171,8 +175,13 @@ public class CustomerChosenCanteen extends AppCompatActivity {
                     }
                 }
 
-                hm.clear();
-                tvCart.setText("");
+                if (wallet>totalBill){
+                    mDatabaseCustomer.child(username).child("wallet").setValue(wallet-totalBill);
+                    hm.clear();
+                    tvCart.setText("");
+                }
+
+                Toast.makeText(CustomerChosenCanteen.this, "Order successfully processed!!", Toast.LENGTH_LONG).show();
             }
         });
 
@@ -227,6 +236,7 @@ public class CustomerChosenCanteen extends AppCompatActivity {
             for (Map.Entry<String, Integer> entry : hm.entrySet()){
                 if (entry.getValue()>0){
                     cartItem += entry.getKey() + " " + entry.getValue() + "\n";
+                    totalBill += entry.getValue()*itemPrice.get(entry.getKey());
                 }
             }
             tvCart.setText(cartItem);
