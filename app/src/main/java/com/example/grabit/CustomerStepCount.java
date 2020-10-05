@@ -31,7 +31,7 @@ public class CustomerStepCount extends AppCompatActivity implements SensorEventL
     double magnitudePrevious = 0;
     Integer stepCount = 0;
     Button btnProfile, btnHome, btnLogout;
-    DatabaseReference mDatabaseCustomer, mDatabaseCanteen;
+    DatabaseReference mDatabaseCustomer;
     FirebaseDatabase database;
 
     @Override
@@ -81,6 +81,7 @@ public class CustomerStepCount extends AppCompatActivity implements SensorEventL
             @Override
             public void onClick(View v) {
                 Intent intent1 = new Intent(CustomerStepCount.this, CustomerProfile.class);
+                intent1.putExtra("Username", username);
                 startActivity(intent1);
             }
         });

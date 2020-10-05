@@ -5,6 +5,8 @@
     android:id="@+id/rvMenu"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_margin="10dp"
+    android:background="#FFFFFF"
     android:orientation="vertical"
     tools:context=".CustomerChosenCanteen">
 
@@ -71,15 +73,19 @@
             <TextView
                 android:id="@+id/tvFoodDetails"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/black"
+                android:textSize="20sp" />
 
             <EditText
                 android:id="@+id/etQuantity"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="150dp"
                 android:ems="10"
                 android:hint="Enter Quantity"
                 android:inputType="number" />
+
         </LinearLayout>
 
     </LinearLayout>
@@ -98,7 +104,7 @@
             android:layout_gravity="center_vertical"
             android:layout_margin="10dp"
             android:layout_weight="1"
-            android:text="Continue" />
+            android:text="Add to cart" />
     </LinearLayout>
 
 </LinearLayout>

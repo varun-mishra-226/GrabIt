@@ -134,8 +134,3 @@ public class CustomerHome extends AppCompatActivity {
         });
     }
 }
-
-
-//http://www.shudhrestaurant.com/menu.html
-//https://www.nriol.com/health/calorie-chart.asp
-//https://www.webmd.com/diet/healthtool-food-calorie-counter

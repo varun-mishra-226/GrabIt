@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
@@ -23,6 +25,8 @@ public class CustomerProfile extends AppCompatActivity {
     EditText etPrevPassword, etNewPassword;
     DatabaseReference mDatabaseCustomer;
     FirebaseDatabase database;
+    TextView tvName, tvRegistration, tvPhone, tvWallet, tvAge, tvHeight, tvWeight,
+            tvGender;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,13 +39,41 @@ public class CustomerProfile extends AppCompatActivity {
         etNewPassword = (EditText) findViewById(R.id.etNewPassword);
         etPrevPassword = (EditText) findViewById(R.id.etPrevPassword);
 
+        tvName = (TextView) findViewById(R.id.tvName);
+        tvAge = (TextView) findViewById(R.id.tvAge);
+        tvWallet = (TextView) findViewById(R.id.tvWallet);
+        tvWeight = (TextView) findViewById(R.id.tvWeight);
+        tvHeight = (TextView) findViewById(R.id.tvHeight);
+        tvGender = (TextView) findViewById(R.id.tvGender);
+        tvPhone = (TextView) findViewById(R.id.tvPhone);
+        tvRegistration = (TextView) findViewById(R.id.tvRegistration);
+
         database = FirebaseDatabase.getInstance();
         mDatabaseCustomer = database.getReference("Customer");
 
         final Intent intent = getIntent();
         final String username = intent.getStringExtra("Username");
 
+        mDatabaseCustomer.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Customer customer = snapshot.child(username).getValue(Customer.class);
 
+                tvName.setText("Name: " + customer.getName());
+                tvAge.setText("Age: " + customer.getAge());
+                tvGender.setText("Gender: " + customer.getGender());
+                tvHeight.setText("Height: " + customer.getHeight() + " cms");
+                tvWeight.setText("Weight: " + customer.getWeight() + " kgs");
+                tvPhone.setText("Phone: " + customer.getPhone());
+                tvRegistration.setText("Reg. No.: " + customer.getRegNo());
+                tvWallet.setText("Wallet: Rs " + customer.getWallet());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
         btnHome.setOnClickListener(new View.OnClickListener() {
             @Override
