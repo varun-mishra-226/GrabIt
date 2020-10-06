@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/rvMenu"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorLightPrimary"
     android:orientation="vertical"
     tools:context=".CustomerChosenCanteen">
 
@@ -13,6 +13,9 @@
         android:id="@+id/HeaderTab"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
         android:layout_weight="1"
         android:orientation="horizontal">
 
@@ -27,17 +30,23 @@
             android:id="@+id/tvUserDetails"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
             android:layout_weight="1"
-            android:gravity="center_vertical" />
+            android:gravity="center_vertical"
+            android:textColor="@color/colorSecondaryText"
+            android:textSize="15sp" />
 
         <Button
             android:id="@+id/btnProfile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="40dp"
+            android:layout_marginLeft="30dp"
             android:layout_weight="1"
-            android:text="Profile" />
+            android:background="@drawable/button_layout"
+            android:text="Profile"
+            android:textColor="@android:color/white"
+            android:textSize="15sp" />
 
         <Button
             android:id="@+id/btnLogout"
@@ -47,37 +56,47 @@
             android:layout_marginLeft="20dp"
             android:layout_marginRight="10dp"
             android:layout_weight="1"
-            android:text="Logout" />
+            android:background="@drawable/button_layout"
+            android:text="Logout"
+            android:textColor="@android:color/white"
+            android:textSize="15sp" />
 
     </LinearLayout>
 
-    <SearchView
-        android:id="@+id/svMenu"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:defaultQueryHint="Search Item" />
-
     <LinearLayout
-        android:id="@+id/Mic"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:gravity="center_horizontal|center_vertical"
         android:orientation="horizontal">
+
+        <SearchView
+            android:id="@+id/svMenu"
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:layout_weight="7"
+            app:defaultQueryHint="Search Item" />
 
         <ImageButton
             android:id="@+id/btnMic"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:layout_margin="5dp"
             android:layout_weight="1"
             android:background="@android:color/white"
             android:scaleType="fitCenter"
             app:srcCompat="@drawable/iv_mic" />
+
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/Menu"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
         android:layout_weight="5"
         android:orientation="vertical">
 
@@ -101,31 +120,41 @@
                 android:layout_gravity="center_vertical"
                 android:layout_weight="2"
                 android:gravity="center_horizontal"
-                android:text="Item Name" />
+                android:text="Item Name"
+                android:textColor="@color/colorPrimaryText"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tvPriceHead"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_weight="1"
+                android:layout_weight="2"
                 android:gravity="center_horizontal"
-                android:text="Price" />
+                android:text="Price"
+                android:textColor="@color/colorPrimaryText"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tvCalorie"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="2"
                 android:gravity="center_horizontal"
-                android:text="Calories" />
+                android:text="Calories"
+                android:textColor="@color/colorPrimaryText"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
         </LinearLayout>
 
         <ListView
             android:id="@+id/lvMenu"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp" />
 
     </LinearLayout>
 
@@ -133,7 +162,8 @@
         android:id="@+id/Cart"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:orientation="vertical">
 
         <TextView
@@ -156,6 +186,8 @@
         android:id="@+id/Navigation"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:layout_weight="1"
         android:orientation="horizontal">
 
@@ -166,7 +198,10 @@
             android:layout_gravity="center_vertical"
             android:layout_margin="10dp"
             android:layout_weight="1"
-            android:text="Go Back" />
+            android:background="@drawable/button_layout"
+            android:text="Go Back"
+            android:textColor="@android:color/white"
+            android:textSize="15sp" />
 
         <Button
             android:id="@+id/btnContinue"
@@ -175,7 +210,10 @@
             android:layout_gravity="center_vertical"
             android:layout_margin="10dp"
             android:layout_weight="1"
-            android:text="Continue" />
+            android:background="@drawable/button_layout"
+            android:text="Continue"
+            android:textColor="@android:color/white"
+            android:textSize="15sp" />
     </LinearLayout>
 
 </LinearLayout>

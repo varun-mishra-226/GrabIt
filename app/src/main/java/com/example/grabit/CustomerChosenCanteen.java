@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
@@ -36,11 +37,13 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-public class CustomerChosenCanteen extends AppCompatActivity {
+public class CustomerChosenCanteen extends AppCompatActivity
+        implements SearchView.OnQueryTextListener{
 
     private static final int REQUEST_CODE_SPEECH_INPUT = 1000;
     TextView tvUserDetails, tvCart;
     Button btnProfile, btnLogout, btnGoBack, btnContinue;
+    SearchView svMenu;
     DatabaseReference mDatabaseCustomer, mDatabaseCanteen, mDatabaseOrder;
     FirebaseDatabase database;
     List<FoodItem> menu = new ArrayList<>();
@@ -49,9 +52,7 @@ public class CustomerChosenCanteen extends AppCompatActivity {
     Hashtable<String, Integer> itemPrice = new Hashtable<String, Integer>();
     ImageButton btnMic;
     FoodItemListAdapter foodItemListAdapter;
-    SearchView searchView;
     Calendar calendar;
-    String timeStamp;
     int totalBill=0;
     int wallet;
 
@@ -70,8 +71,8 @@ public class CustomerChosenCanteen extends AppCompatActivity {
         mDatabaseOrder = database.getReference("Order");
         lvMenu = (ListView) findViewById(R.id.lvMenu);
         btnMic = (ImageButton) findViewById(R.id.btnMic);
-        searchView = (SearchView) findViewById(R.id.svMenu);
         tvCart = (TextView) findViewById(R.id.tvCart);
+        svMenu = (SearchView) findViewById(R.id.svMenu);
 
         final Intent intent = getIntent();
         final String username = intent.getStringExtra("Username");
@@ -112,23 +113,9 @@ public class CustomerChosenCanteen extends AppCompatActivity {
                     Log.i("Menu Calorie Name", String.valueOf(menu.get(i).getCalorie()));
                 }
 
-                foodItemListAdapter = new FoodItemListAdapter(CustomerChosenCanteen.this,
-                        R.layout.menu_food_item, menu);
+                foodItemListAdapter = new FoodItemListAdapter(CustomerChosenCanteen.this, menu);
                 lvMenu.setAdapter(foodItemListAdapter);
                 lvMenu.setTextFilterEnabled(true);
-
-                searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                    @Override
-                    public boolean onQueryTextSubmit(String query) {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onQueryTextChange(String newText) {
-                        foodItemListAdapter.getFilter().filter(newText);
-                        return false;
-                    }
-                });
 
                 lvMenu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
@@ -140,6 +127,9 @@ public class CustomerChosenCanteen extends AppCompatActivity {
                         startActivityForResult(intent1, 1);
                     }
                 });
+
+                lvMenu.setTextFilterEnabled(true);
+                setupSearchView();
             }
 
             @Override
@@ -202,29 +192,13 @@ public class CustomerChosenCanteen extends AppCompatActivity {
                 finish();
             }
         });
-
-        btnMic.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                speak();
-            }
-        });
     }
 
-    private void speak() {
-        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, Locale.getDefault());
-        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Search for the item in the list");
-
-        try{
-            startActivityForResult(intent, REQUEST_CODE_SPEECH_INPUT);
-        }
-        catch (Exception e){
-            Toast.makeText(CustomerChosenCanteen.this, ""+e.getMessage(),
-                    Toast.LENGTH_SHORT).show();
-        }
+    private void setupSearchView() {
+        svMenu.setIconifiedByDefault(false);
+        svMenu.setOnQueryTextListener(CustomerChosenCanteen.this);
+        svMenu.setSubmitButtonEnabled(true);
+        svMenu.setQueryHint("Search here...");
     }
 
     @Override
@@ -247,5 +221,20 @@ public class CustomerChosenCanteen extends AppCompatActivity {
                 Log.i("Voice Recognition", res.get(0));
             }
         }
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        if (TextUtils.isEmpty(newText)) {
+            lvMenu.clearTextFilter();
+        } else {
+            lvMenu.setFilterText(newText);
+        }
+        return true;
     }
 }

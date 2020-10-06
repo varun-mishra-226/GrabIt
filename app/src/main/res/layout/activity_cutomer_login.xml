@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="20dp"
+    android:background="@color/colorLightPrimary"
     android:orientation="vertical"
     tools:context=".CutomerLogin">
 
@@ -13,13 +13,18 @@
         android:id="@+id/ivLogin"
         android:layout_width="match_parent"
         android:layout_height="100dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="20dp"
         app:srcCompat="@drawable/login_icon" />
 
     <TextView
         android:id="@+id/tvHello"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10sp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="20dp"
         android:gravity="center_horizontal"
         android:text="Hello"
         android:textSize="75sp"
@@ -29,7 +34,8 @@
         android:id="@+id/tvSignInto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10sp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         android:gravity="center_horizontal"
         android:text="Sign in to your account"
         android:textSize="25sp" />
@@ -38,7 +44,9 @@
         android:id="@+id/etUsername"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginRight="20dp"
         android:ems="10"
         android:hint="Enter Username"
         android:inputType="textPersonName" />
@@ -47,23 +55,23 @@
         android:id="@+id/etPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10sp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="20dp"
         android:ems="10"
         android:hint="Enter Password"
         android:inputType="textPassword" />
 
-    <LinearLayout
+    <Button
+        android:id="@+id/btnSubmit"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/btnSubmit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Sign In" />
-    </LinearLayout>
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/button_layout"
+        android:text="Submit"
+        android:textColor="@color/colorText"
+        android:textSize="15sp" />
 
 </LinearLayout>
