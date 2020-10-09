@@ -40,14 +40,14 @@ import java.util.Map;
 public class CustomerChosenCanteen extends AppCompatActivity
         implements SearchView.OnQueryTextListener{
 
-    private static final int REQUEST_CODE_SPEECH_INPUT = 1000;
+    private static final int REQUEST_CODE_SPEECH_INPUT = 1000, REQ_FOOD_ITEM = 500;
     TextView tvUserDetails, tvCart;
     Button btnProfile, btnLogout, btnGoBack, btnContinue;
     SearchView svMenu;
     DatabaseReference mDatabaseCustomer, mDatabaseCanteen, mDatabaseOrder;
     FirebaseDatabase database;
     List<FoodItem> menu = new ArrayList<>();
-    ListView lvMenu;
+    ListView lvMenu, lvCart;
     Hashtable<String, Integer> hm = new Hashtable<String, Integer>();
     Hashtable<String, Integer> itemPrice = new Hashtable<String, Integer>();
     ImageButton btnMic;
@@ -55,6 +55,7 @@ public class CustomerChosenCanteen extends AppCompatActivity
     Calendar calendar;
     int totalBill=0;
     int wallet;
+    String query;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,7 +125,7 @@ public class CustomerChosenCanteen extends AppCompatActivity
                         intent1.putExtra("Username", username);
                         intent1.putExtra("chosenCanteen", chosenCanteen);
                         intent1.putExtra("chosenItem", menu.get(position).getName());
-                        startActivityForResult(intent1, 1);
+                        startActivityForResult(intent1, REQ_FOOD_ITEM);
                     }
                 });
 
@@ -192,6 +193,33 @@ public class CustomerChosenCanteen extends AppCompatActivity
                 finish();
             }
         });
+
+        btnMic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                query = "";
+                speak();
+            }
+        });
+    }
+
+    private void speak() {
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Search for item...");
+        Log.i("VoiceRecognition", "Initial Msg + query: " + query);
+
+        try {
+            startActivityForResult(intent, REQUEST_CODE_SPEECH_INPUT);
+            Log.i("VoiceRecognition", "Inside Msg + query: " + query);
+            Log.i("VoiceRecognition", "Q: " + query);
+        }
+        catch (Exception e){
+            Toast.makeText(this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+        Log.i("VoiceRecognition", "Final Msg  + query: " + query);
     }
 
     private void setupSearchView() {
@@ -204,21 +232,28 @@ public class CustomerChosenCanteen extends AppCompatActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode==1){
-            hm.put(data.getStringExtra("chosenItem"), Integer.parseInt(data.getStringExtra("Quantity")));
-            String cartItem = "";
-            for (Map.Entry<String, Integer> entry : hm.entrySet()){
-                if (entry.getValue()>0){
-                    cartItem += entry.getKey() + " " + entry.getValue() + "\n";
-                    totalBill += entry.getValue()*itemPrice.get(entry.getKey());
+        switch (requestCode){
+            case REQ_FOOD_ITEM:{
+                if (resultCode==1){
+                    hm.put(data.getStringExtra("chosenItem"), Integer.parseInt(data.getStringExtra("Quantity")));
+                    String cartItem = "Item Name    Quantity    Total\n";
+                    for (Map.Entry<String, Integer> entry : hm.entrySet()){
+                        if (entry.getValue()>0){
+                            cartItem += entry.getKey() + "    " + entry.getValue() + "    " + entry.getValue()*itemPrice.get(entry.getKey()) + "\n";
+                            totalBill += entry.getValue()*itemPrice.get(entry.getKey());
+                        }
+                    }
+                    tvCart.setText(cartItem);
                 }
             }
-            tvCart.setText(cartItem);
-        }
-        else if (resultCode==REQUEST_CODE_SPEECH_INPUT){
-            if (resultCode==RESULT_OK && null!=data){
-                ArrayList<String> res = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                Log.i("Voice Recognition", res.get(0));
+            case REQUEST_CODE_SPEECH_INPUT:{
+                if (resultCode==RESULT_OK && null!=data){
+                    ArrayList<String> res = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                    Log.i("VoiceRecognition", "Inside Activity Result  + query: " + query);
+                    query = res.get(0);
+                    Log.i("VoiceRecognition", "Inside " + query);
+                    svMenu.setQuery(query, false);
+                }
             }
         }
     }
@@ -230,10 +265,15 @@ public class CustomerChosenCanteen extends AppCompatActivity
 
     @Override
     public boolean onQueryTextChange(String newText) {
+
+        FoodItemListAdapter adapter = (FoodItemListAdapter) lvMenu.getAdapter();
+
         if (TextUtils.isEmpty(newText)) {
-            lvMenu.clearTextFilter();
+            //lvMenu.clearTextFilter();
+            adapter.getFilter().filter(null);
         } else {
-            lvMenu.setFilterText(newText);
+            //lvMenu.setFilterText(newText);
+            adapter.getFilter().filter(newText);
         }
         return true;
     }

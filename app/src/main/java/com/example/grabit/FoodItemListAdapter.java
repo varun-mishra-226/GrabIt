@@ -22,18 +22,64 @@ import java.util.List;
 public class FoodItemListAdapter extends BaseAdapter implements Filterable {
     Context context;
     List<FoodItem> menuList, filterMenuList;
+    int menuListSize;
 
     public FoodItemListAdapter(Context context, List<FoodItem> menuList){
         super();
 
         this.context = context;
         this.menuList = menuList;
+        this.menuListSize = menuList.size();
     }
 
     public class FoodItemHolder{
         TextView name;
         TextView price;
         TextView calorie;
+    }
+
+    @NonNull
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+                final FilterResults filterResults = new FilterResults();
+                final ArrayList<FoodItem> results = new ArrayList<FoodItem>();
+                if (filterMenuList==null){
+                    filterMenuList = menuList;
+                }
+                if (constraint!=null){
+                    if (filterMenuList!=null && filterMenuList.size()>0){
+                        for (final FoodItem f: filterMenuList){
+                            if (f.getName().toLowerCase().contains(constraint.toString().toLowerCase()))
+                                results.add(f);
+                        }
+                    }
+                    filterResults.values = results;
+                }
+                else{
+                    if (filterMenuList!=null && filterMenuList.size()>0){
+                        for (final FoodItem f: filterMenuList){
+                            results.add(f);
+                        }
+                    }
+                    filterResults.values = results;
+                }
+                return filterResults;
+            }
+
+            @SuppressWarnings("unchecked")
+            @Override
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+                menuList = (ArrayList<FoodItem>) results.values;
+                notifyDataSetChanged();
+            }
+        };
+    }
+
+    public void notifyDataSetChanged() {
+        super.notifyDataSetChanged();
     }
 
     @Override
@@ -86,41 +132,5 @@ public class FoodItemListAdapter extends BaseAdapter implements Filterable {
         tvCalorie.setText(String.valueOf(foodItem.getCalorie()));*/
 
         return convertView;
-    }
-
-    @NonNull
-    @Override
-    public Filter getFilter() {
-        return new Filter() {
-            @Override
-            protected FilterResults performFiltering(CharSequence constraint) {
-                final FilterResults filterResults = new FilterResults();
-                final ArrayList<FoodItem> results = new ArrayList<>();
-                if (filterMenuList==null){
-                    filterMenuList = menuList;
-                }
-                if (constraint!=null){
-                    if (filterMenuList!=null && filterMenuList.size()>0){
-                        for (final FoodItem f: filterMenuList){
-                            if (f.getName().toLowerCase().contains(constraint.toString().toLowerCase()))
-                                results.add(f);
-                        }
-                    }
-                    filterResults.values = results;
-                }
-                return filterResults;
-            }
-
-            @SuppressWarnings("unchecked")
-            @Override
-            protected void publishResults(CharSequence constraint, FilterResults results) {
-                menuList = (ArrayList<FoodItem>) results.values;
-                notifyDataSetChanged();
-            }
-        };
-    }
-
-    public void notifyDataSetChanged() {
-        super.notifyDataSetChanged();
     }
 }

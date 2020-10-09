@@ -47,6 +47,23 @@ public class CustomerWelcomeActivity extends AppCompatActivity {
         final Intent intent = getIntent();
         final String username = intent.getStringExtra("Username");
 
+        mDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.child(username).child("calorieTarget").exists()){
+                    Intent intent1 = new Intent(CustomerWelcomeActivity.this, CustomerHome.class);
+                    intent1.putExtra("Username", username);
+                    startActivity(intent1);
+                    finish();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
         btnMale.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

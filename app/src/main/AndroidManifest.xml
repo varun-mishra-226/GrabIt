@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".CustomerWelcomeActivity"></activity>
+        <activity android:name=".CustomerAlterDetails"></activity>
+        <activity android:name=".CustomerWelcomeActivity" />
         <activity android:name=".CustomerStepCount" />
         <activity android:name=".CustomerChosenFoodItem" />
         <activity android:name=".CustomerFitnessActivity" />
@@ -34,5 +35,8 @@
         </activity>
         <activity android:name=".MainActivity" />
     </application>
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>
