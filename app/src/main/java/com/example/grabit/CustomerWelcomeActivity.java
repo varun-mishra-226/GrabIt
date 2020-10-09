@@ -114,6 +114,7 @@ public class CustomerWelcomeActivity extends AppCompatActivity {
                                 finish();
                             }
                             else{
+                                mDatabase.child(username).child("name").setValue(name);
                                 mDatabase.child(username).child("phone").setValue(phone);
                                 mDatabase.child(username).child("height").setValue(height);
                                 mDatabase.child(username).child("weight").setValue(weight);

@@ -21,7 +21,7 @@ import com.google.firebase.database.ValueEventListener;
 
 public class CustomerProfile extends AppCompatActivity {
 
-    Button btnHome, btnLogOut, btnChangePassword;
+    Button btnHome, btnLogOut, btnChangePassword, btnUpdateDetails;
     EditText etPrevPassword, etNewPassword;
     DatabaseReference mDatabaseCustomer;
     FirebaseDatabase database;
@@ -36,6 +36,7 @@ public class CustomerProfile extends AppCompatActivity {
         btnHome = (Button) findViewById(R.id.btnHome);
         btnLogOut = (Button) findViewById(R.id.btnLogOut);
         btnChangePassword = (Button) findViewById(R.id.btnChangePassword);
+        btnUpdateDetails = (Button) findViewById(R.id.btnUpdateDetails);
         etNewPassword = (EditText) findViewById(R.id.etNewPassword);
         etPrevPassword = (EditText) findViewById(R.id.etPrevPassword);
 
@@ -90,6 +91,15 @@ public class CustomerProfile extends AppCompatActivity {
                 Intent intent1 = new Intent(CustomerProfile.this, CutomerLogin.class);
                 startActivity(intent1);
                 finish();
+            }
+        });
+
+        btnUpdateDetails.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent1 = new Intent(CustomerProfile.this, CustomerAlterDetails.class);
+                intent1.putExtra("Username", username);
+                startActivity(intent1);
             }
         });
 
