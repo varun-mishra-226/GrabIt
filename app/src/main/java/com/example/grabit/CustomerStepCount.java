@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,21 +31,25 @@ import java.util.Calendar;
 public class CustomerStepCount extends AppCompatActivity implements SensorEventListener {
 
     SensorManager sensorManager;
-    TextView tvStepCount, tvUserDetails;
+    TextView tvUserDetails, tvCurrentSteps, tvStepsLeft;
     Sensor sensor;
     double magnitudePrevious = 0;
     Integer stepCount = 0;
     Button btnProfile, btnHome, btnLogout;
     DatabaseReference mDatabaseCustomer;
     FirebaseDatabase database;
+    String username;
+    int targetSteps, progress;
+    ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_step_count);
 
-        tvStepCount = (TextView) findViewById(R.id.tvStepCount);
         tvUserDetails = (TextView) findViewById(R.id.tvUserDetails);
+        tvStepsLeft = (TextView) findViewById(R.id.tvStepsLeft);
+        tvCurrentSteps = (TextView) findViewById(R.id.tvCurrentSteps);
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         btnHome = (Button) findViewById(R.id.btnHome);
@@ -52,9 +57,10 @@ public class CustomerStepCount extends AppCompatActivity implements SensorEventL
         btnLogout = (Button) findViewById(R.id.btnLogout);
         database = FirebaseDatabase.getInstance();
         mDatabaseCustomer = database.getReference("Customer");
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
         Intent intent = getIntent();
-        final String username = intent.getStringExtra("Username");
+        username = intent.getStringExtra("Username");
 
         mDatabaseCustomer.addValueEventListener(new ValueEventListener() {
             @Override
@@ -64,6 +70,7 @@ public class CustomerStepCount extends AppCompatActivity implements SensorEventL
                 String reg = customer.getRegNo();
                 int wallet = customer.getWallet();
                 tvUserDetails.setText(name + "\n" + reg + "\nWallet: " + wallet);
+                targetSteps = (int) (customer.getCalorieTarget()/(0.04));
             }
 
             @Override
@@ -116,7 +123,29 @@ public class CustomerStepCount extends AppCompatActivity implements SensorEventL
                     if (magnitudeDelta > 6){
                         stepCount++;
                     }
-                    tvStepCount.setText(stepCount.toString());
+                    tvCurrentSteps.setText(stepCount.toString() + "\n" + "STEPS");
+                    int res = (targetSteps-stepCount);
+                    tvStepsLeft.setText( res + " STEPS TO GO");
+                    if (targetSteps==0)
+                        mDatabaseCustomer.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                Customer customer = snapshot.child(username).getValue(Customer.class);
+                                targetSteps = (int) (customer.getCalorieTarget()/(0.04));
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+                    else {
+                        Log.i("TargetSteps", String.valueOf(targetSteps));
+                        Log.i("CurrentSteps", String.valueOf(stepCount));
+                        progress = stepCount/targetSteps * 100;
+                        Log.i("Progress", String.valueOf(progress));
+                        progressBar.setProgress(progress);
+                    }
                 }
             }
 
@@ -129,13 +158,17 @@ public class CustomerStepCount extends AppCompatActivity implements SensorEventL
         sensorManager.registerListener(sensorEventListener, sensor, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
+    public void updateValue(int sC){
+        mDatabaseCustomer.child(username).child("currentSteps").setValue(sC);
+    }
+
     private void schedAlarm(Context context) {
         Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.HOUR_OF_DAY, 1);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MILLISECOND, 0);
-        //cal.add(Calendar.DAY_OF_MONTH, 1);
+        cal.add(Calendar.DAY_OF_MONTH, 1);
         PendingIntent pi = PendingIntent.getBroadcast(context, 0, new Intent(context, YourBroadcastReceiver.class), PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         am.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), 1000*60*60*24, pi);
@@ -146,6 +179,9 @@ public class CustomerStepCount extends AppCompatActivity implements SensorEventL
         super.onResume();
         SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
         stepCount = sharedPreferences.getInt("stepCount", 0);
+        //targetSteps = sharedPreferences.getInt("targetSteps", 0);
+        updateValue(stepCount);
+        //updateValue(targetSteps);
     }
 
     @Override
@@ -155,7 +191,10 @@ public class CustomerStepCount extends AppCompatActivity implements SensorEventL
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.clear();
         editor.putInt("stepCount", stepCount);
+        //editor.putInt("targetSteps", targetSteps);
         editor.apply();
+        updateValue(stepCount);
+        //updateValue(targetSteps);
     }
 
     @Override
@@ -165,7 +204,10 @@ public class CustomerStepCount extends AppCompatActivity implements SensorEventL
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.clear();
         editor.putInt("stepCount", stepCount);
+        //editor.putInt("targetSteps", targetSteps);
         editor.apply();
+        updateValue(stepCount);
+        //updateValue(targetSteps);
     }
 
     @Override

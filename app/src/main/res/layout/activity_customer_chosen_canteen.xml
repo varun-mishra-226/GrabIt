@@ -24,7 +24,7 @@
             android:layout_width="50dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            app:srcCompat="@drawable/user_icon" />
+            app:srcCompat="@drawable/user_icon_1" />
 
         <TextView
             android:id="@+id/tvUserDetails"
@@ -86,7 +86,7 @@
             android:layout_height="35dp"
             android:layout_margin="5dp"
             android:layout_weight="1"
-            android:background="@android:color/white"
+            android:background="@drawable/iv_mic"
             android:scaleType="fitCenter"
             app:srcCompat="@drawable/iv_mic" />
 

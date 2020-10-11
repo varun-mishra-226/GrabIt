@@ -26,7 +26,10 @@ public class CustomerProfile extends AppCompatActivity {
     DatabaseReference mDatabaseCustomer;
     FirebaseDatabase database;
     TextView tvName, tvRegistration, tvPhone, tvWallet, tvAge, tvHeight, tvWeight,
-            tvGender;
+            tvGender, tvCurrentProgress;
+    ProgressBar progressBar;
+    int target;
+    float currentSteps, progress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +42,7 @@ public class CustomerProfile extends AppCompatActivity {
         btnUpdateDetails = (Button) findViewById(R.id.btnUpdateDetails);
         etNewPassword = (EditText) findViewById(R.id.etNewPassword);
         etPrevPassword = (EditText) findViewById(R.id.etPrevPassword);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
         tvName = (TextView) findViewById(R.id.tvName);
         tvAge = (TextView) findViewById(R.id.tvAge);
@@ -48,6 +52,7 @@ public class CustomerProfile extends AppCompatActivity {
         tvGender = (TextView) findViewById(R.id.tvGender);
         tvPhone = (TextView) findViewById(R.id.tvPhone);
         tvRegistration = (TextView) findViewById(R.id.tvRegistration);
+        tvCurrentProgress = (TextView) findViewById(R.id.tvCurrentProgress);
 
         database = FirebaseDatabase.getInstance();
         mDatabaseCustomer = database.getReference("Customer");
@@ -68,6 +73,14 @@ public class CustomerProfile extends AppCompatActivity {
                 tvPhone.setText("Phone: " + customer.getPhone());
                 tvRegistration.setText("Reg. No.: " + customer.getRegNo());
                 tvWallet.setText("Wallet: Rs " + customer.getWallet());
+
+                currentSteps = customer.getCurrentSteps();
+                target = customer.getCalorieTarget();
+                progress = (float) ((currentSteps*0.04)/target)*100;
+                Log.i("CurrentProgress", String.valueOf(progress));
+
+                progressBar.setProgress((int) progress);
+                tvCurrentProgress.setText(String.valueOf((int) progress) + "%");
             }
 
             @Override

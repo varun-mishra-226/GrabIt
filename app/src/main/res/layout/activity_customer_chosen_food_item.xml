@@ -5,8 +5,7 @@
     android:id="@+id/rvMenu"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="10dp"
-    android:background="#FFFFFF"
+    android:background="@color/colorLightPrimary"
     android:orientation="vertical"
     tools:context=".CustomerChosenCanteen">
 
@@ -14,6 +13,8 @@
         android:id="@+id/HeaderTab"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:layout_weight="1"
         android:orientation="horizontal">
 
@@ -22,23 +23,29 @@
             android:layout_width="50dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            app:srcCompat="@drawable/user_icon" />
+            app:srcCompat="@drawable/user_icon_1" />
 
         <TextView
             android:id="@+id/tvUserDetails"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
             android:layout_weight="1"
-            android:gravity="center_vertical" />
+            android:gravity="center_vertical"
+            android:textColor="@color/colorSecondaryText"
+            android:textSize="15sp" />
 
         <Button
             android:id="@+id/btnProfile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="40dp"
+            android:layout_marginLeft="30dp"
             android:layout_weight="1"
-            android:text="Profile" />
+            android:background="@drawable/button_layout"
+            android:text="Profile"
+            android:textColor="@android:color/white"
+            android:textSize="15sp" />
 
         <Button
             android:id="@+id/btnLogout"
@@ -48,7 +55,10 @@
             android:layout_marginLeft="20dp"
             android:layout_marginRight="10dp"
             android:layout_weight="1"
-            android:text="Logout" />
+            android:background="@drawable/button_layout"
+            android:text="Logout"
+            android:textColor="@android:color/white"
+            android:textSize="15sp" />
 
     </LinearLayout>
 
@@ -56,6 +66,8 @@
         android:id="@+id/ChosenFood"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:layout_weight="5"
         android:orientation="vertical">
 
@@ -94,6 +106,8 @@
         android:id="@+id/Navigation"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:layout_weight="1"
         android:orientation="horizontal">
 
@@ -104,7 +118,10 @@
             android:layout_gravity="center_vertical"
             android:layout_margin="10dp"
             android:layout_weight="1"
-            android:text="Add to cart" />
+            android:background="@drawable/button_layout"
+            android:text="Add to cart"
+            android:textColor="@android:color/white"
+            android:textSize="15sp" />
     </LinearLayout>
 
 </LinearLayout>
