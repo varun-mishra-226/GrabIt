@@ -39,7 +39,7 @@ public class CustomerStepCount extends AppCompatActivity implements SensorEventL
     DatabaseReference mDatabaseCustomer;
     FirebaseDatabase database;
     String username;
-    int targetSteps, progress;
+    int targetSteps=1, progress;
     ProgressBar progressBar;
 
     @Override
@@ -120,13 +120,15 @@ public class CustomerStepCount extends AppCompatActivity implements SensorEventL
                     double magnitudeDelta = mag - magnitudePrevious;
                     magnitudePrevious = mag;
 
-                    if (magnitudeDelta > 6){
+                    if (magnitudeDelta > 8){
                         stepCount++;
                     }
                     tvCurrentSteps.setText(stepCount.toString() + "\n" + "STEPS");
                     int res = (targetSteps-stepCount);
                     tvStepsLeft.setText( res + " STEPS TO GO");
-                    if (targetSteps==0)
+                    //progress = stepCount/targetSteps * 100;
+                    //progressBar.setProgress(progress);
+                    /*if (targetSteps==0)
                         mDatabaseCustomer.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -145,7 +147,7 @@ public class CustomerStepCount extends AppCompatActivity implements SensorEventL
                         progress = stepCount/targetSteps * 100;
                         Log.i("Progress", String.valueOf(progress));
                         progressBar.setProgress(progress);
-                    }
+                    }*/
                 }
             }
 

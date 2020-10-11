@@ -29,6 +29,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.w3c.dom.Text;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -41,13 +43,13 @@ public class CustomerChosenCanteen extends AppCompatActivity
         implements SearchView.OnQueryTextListener{
 
     private static final int REQUEST_CODE_SPEECH_INPUT = 1000, REQ_FOOD_ITEM = 500;
-    TextView tvUserDetails, tvCart;
+    TextView tvUserDetails, tvCart, tvCartQuantity, tvCartPrice;
     Button btnProfile, btnLogout, btnGoBack, btnContinue;
     SearchView svMenu;
     DatabaseReference mDatabaseCustomer, mDatabaseCanteen, mDatabaseOrder;
     FirebaseDatabase database;
     List<FoodItem> menu = new ArrayList<>();
-    ListView lvMenu, lvCart;
+    ListView lvMenu;
     Hashtable<String, Integer> hm = new Hashtable<String, Integer>();
     Hashtable<String, Integer> itemPrice = new Hashtable<String, Integer>();
     ImageButton btnMic;
@@ -73,6 +75,8 @@ public class CustomerChosenCanteen extends AppCompatActivity
         lvMenu = (ListView) findViewById(R.id.lvMenu);
         btnMic = (ImageButton) findViewById(R.id.btnMic);
         tvCart = (TextView) findViewById(R.id.tvCart);
+        tvCartPrice = (TextView) findViewById(R.id.tvCartPrice);
+        tvCartQuantity = (TextView) findViewById(R.id.tvCartQuantity);
         svMenu = (SearchView) findViewById(R.id.svMenu);
 
         final Intent intent = getIntent();
@@ -81,6 +85,7 @@ public class CustomerChosenCanteen extends AppCompatActivity
 
         mDatabaseCanteen = database.getReference("/Canteen/" + chosenCanteen + "/Menu");
 
+        // To add header details
         mDatabaseCustomer.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -170,6 +175,8 @@ public class CustomerChosenCanteen extends AppCompatActivity
                     mDatabaseCustomer.child(username).child("wallet").setValue(wallet-totalBill);
                     hm.clear();
                     tvCart.setText("");
+                    tvCartPrice.setText("");
+                    tvCartQuantity.setText("");
                 }
 
                 Toast.makeText(CustomerChosenCanteen.this, "Order successfully processed!!", Toast.LENGTH_LONG).show();
@@ -236,14 +243,20 @@ public class CustomerChosenCanteen extends AppCompatActivity
             case REQ_FOOD_ITEM:{
                 if (resultCode==1){
                     hm.put(data.getStringExtra("chosenItem"), Integer.parseInt(data.getStringExtra("Quantity")));
-                    String cartItem = "Item Name    Quantity    Total\n";
+                    String cartItem = "Item Name\n";
+                    String cartItemQuantity = "Quantity\n";
+                    String cartItemPrice = "Price\n";
                     for (Map.Entry<String, Integer> entry : hm.entrySet()){
                         if (entry.getValue()>0){
-                            cartItem += entry.getKey() + "    " + entry.getValue() + "    " + entry.getValue()*itemPrice.get(entry.getKey()) + "\n";
+                            cartItem += entry.getKey() + "\n";
+                            cartItemPrice += entry.getValue()*itemPrice.get(entry.getKey()) + "\n";
+                            cartItemQuantity += entry.getValue() + "\n";
                             totalBill += entry.getValue()*itemPrice.get(entry.getKey());
                         }
                     }
                     tvCart.setText(cartItem);
+                    tvCartQuantity.setText(cartItemQuantity);
+                    tvCartPrice.setText(cartItemPrice);
                 }
             }
             case REQUEST_CODE_SPEECH_INPUT:{

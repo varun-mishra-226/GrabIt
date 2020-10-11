@@ -41,7 +41,7 @@ public class CutomerLogin extends AppCompatActivity {
                 if (etUsername.getText().toString().isEmpty() ||
                         etPassword.getText().toString().trim().isEmpty()){
                     Toast.makeText(CutomerLogin.this, "Please enter all the fields!!",
-                            Toast.LENGTH_LONG).show();
+                            Toast.LENGTH_SHORT).show();
                 }
                 else {
                     Log.i("Submit Select", "Submit button pressed");
@@ -79,12 +79,12 @@ public class CutomerLogin extends AppCompatActivity {
                     }
                     else {
                         Toast.makeText(CutomerLogin.this, "Wrong Password!!",
-                                Toast.LENGTH_LONG).show();
+                                Toast.LENGTH_SHORT).show();
                     }
                 }
                 else {
                     Toast.makeText(CutomerLogin.this, "Username does not exist!!",
-                            Toast.LENGTH_LONG).show();
+                            Toast.LENGTH_SHORT).show();
                 }
             }
 
