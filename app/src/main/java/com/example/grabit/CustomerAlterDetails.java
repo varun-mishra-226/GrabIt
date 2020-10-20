@@ -51,6 +51,7 @@ public class CustomerAlterDetails extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 gender = "Male";
+                btnMale.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
             }
         });
 
@@ -58,6 +59,7 @@ public class CustomerAlterDetails extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 gender = "Female";
+                btnFemale.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
             }
         });
 

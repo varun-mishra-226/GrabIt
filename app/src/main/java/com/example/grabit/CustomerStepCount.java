@@ -120,7 +120,7 @@ public class CustomerStepCount extends AppCompatActivity implements SensorEventL
                     double magnitudeDelta = mag - magnitudePrevious;
                     magnitudePrevious = mag;
 
-                    if (magnitudeDelta > 8){
+                    if (magnitudeDelta > 8 ){
                         stepCount++;
                     }
                     tvCurrentSteps.setText(stepCount.toString() + "\n" + "STEPS");
