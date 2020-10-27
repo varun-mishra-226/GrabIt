@@ -6,9 +6,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -36,6 +39,10 @@ public class FoodItemListAdapter extends BaseAdapter implements Filterable {
         TextView name;
         TextView price;
         TextView calorie;
+        EditText holderQuantity;
+        ImageButton increase;
+        ImageButton decrease;
+        ImageView category;
     }
 
     @NonNull
@@ -99,15 +106,19 @@ public class FoodItemListAdapter extends BaseAdapter implements Filterable {
 
     @NonNull
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        FoodItemHolder holder;
+    public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+        final FoodItemHolder holder;
         if (convertView==null){
             convertView = LayoutInflater.from(context)
                     .inflate(R.layout.menu_food_item, parent, false);
             holder = new FoodItemHolder();
             holder.name = (TextView) convertView.findViewById(R.id.tvFoodName);
-            holder.calorie = (TextView) convertView.findViewById(R.id.tvCalorie);
             holder.price = (TextView) convertView.findViewById(R.id.tvPrice);
+            holder.calorie = (TextView) convertView.findViewById(R.id.tvCalorie);
+            holder.holderQuantity = (EditText) convertView.findViewById(R.id.etQuantity);
+            holder.increase = (ImageButton) convertView.findViewById(R.id.ivIncrease);
+            holder.decrease = (ImageButton) convertView.findViewById(R.id.ivDecrease);
+            holder.category = (ImageView) convertView.findViewById(R.id.ivFoodCategory);
             convertView.setTag(holder);
         }
         else{
@@ -116,7 +127,29 @@ public class FoodItemListAdapter extends BaseAdapter implements Filterable {
 
         holder.name.setText(menuList.get(position).getName());
         holder.price.setText(String.valueOf(menuList.get(position).getPrice()));
-        holder.calorie.setText(String.valueOf(menuList.get(position).getCalorie()));
+        holder.calorie.setText("Calories: " + String.valueOf(menuList.get(position).getCalorie()));
+        holder.holderQuantity.setText(menuList.get(position).quantity + "");
+        if (menuList.get(position).getCategory().equals("Beverages")){
+            holder.category.setImageResource(R.drawable.beverage_new);
+        }
+        else if (menuList.get(position).getCategory().equals("Snacks")){
+            holder.category.setImageResource(R.drawable.snacks_new);
+        }
+        else if (menuList.get(position).getCategory().equals("Meals")){
+            holder.category.setImageResource(R.drawable.meals_new);
+        }
+        holder.increase.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateQuantity(position, holder.holderQuantity, 1);
+            }
+        });
+        holder.decrease.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateQuantity(position, holder.holderQuantity, -1);
+            }
+        });
 
         /*LayoutInflater layoutInflater = LayoutInflater.from(context);
         View view = layoutInflater.inflate(R.layout.menu_food_item, null);
@@ -132,5 +165,17 @@ public class FoodItemListAdapter extends BaseAdapter implements Filterable {
         tvCalorie.setText(String.valueOf(foodItem.getCalorie()));*/
 
         return convertView;
+    }
+    private void updateQuantity(int position, EditText edTextQuantity, int value) {
+        FoodItem products = (FoodItem) getItem(position);
+        if(value > 0){
+            products.quantity = products.quantity + 1;
+        }
+        else{
+            if(products.quantity > 0){
+                products.quantity = products.quantity - 1;
+            }
+        }
+        edTextQuantity.setText(products.quantity + "");
     }
 }

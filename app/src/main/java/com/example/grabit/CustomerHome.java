@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -59,6 +60,7 @@ public class CustomerHome extends AppCompatActivity {
                 String reg = customer.getRegNo();
                 int wallet = customer.getWallet();
                 tvUserDetails.setText(name + "\n" + reg + "\nWallet: " + wallet);
+                tvUserDetails.setMovementMethod(new ScrollingMovementMethod());
             }
 
             @Override
@@ -132,5 +134,10 @@ public class CustomerHome extends AppCompatActivity {
                 startActivity(intent1);
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+
     }
 }

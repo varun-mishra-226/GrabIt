@@ -9,22 +9,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".CustomerAlterDetails"></activity>
+        <activity android:name=".FoodItemPopup"
+            android:theme="@style/AppTheme.PopMe"></activity>
+        <activity android:name=".CustomerAlterDetails" />
         <activity android:name=".CustomerWelcomeActivity" />
         <activity android:name=".CustomerStepCount" />
         <activity android:name=".CustomerChosenFoodItem" />
-        <activity android:name=".CustomerFitnessActivity" />
-        <activity android:name=".EmployeePastOrder" />
-        <activity android:name=".EmployeeTodayOrder" />
-        <activity android:name=".EmployeeHome" />
-        <activity android:name=".EmployeeProfile" />
-        <activity android:name=".EmployeeLogin" />
         <activity android:name=".CustomerProfile" />
         <activity android:name=".CustomerTodayOrder" />
-        <activity android:name=".CustomerPastOrder" />
         <activity android:name=".CustomerChosenCanteen" />
         <activity android:name=".CustomerHome" />
-        <activity android:name=".CustomerRegister" />
         <activity android:name=".CutomerLogin" />
         <activity android:name=".InitialLogin">
             <intent-filter>
@@ -35,8 +29,8 @@
         </activity>
         <activity android:name=".MainActivity" />
     </application>
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
-
     <uses-permission android:name="android.permission.INTERNET" />
+
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
 </manifest>

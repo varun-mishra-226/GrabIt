@@ -26,10 +26,10 @@ public class CustomerProfile extends AppCompatActivity {
     DatabaseReference mDatabaseCustomer;
     FirebaseDatabase database;
     TextView tvName, tvRegistration, tvPhone, tvWallet, tvAge, tvHeight, tvWeight,
-            tvGender, tvCurrentProgress;
-    ProgressBar progressBar;
+            tvGender, tvCurrentProgress, tvCurrentProgress1;
+    ProgressBar progressBar, progressBar1;
     int target;
-    float currentSteps, progress;
+    float currentSteps, progress, progress1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +43,7 @@ public class CustomerProfile extends AppCompatActivity {
         etNewPassword = (EditText) findViewById(R.id.etNewPassword);
         etPrevPassword = (EditText) findViewById(R.id.etPrevPassword);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        progressBar1 = (ProgressBar) findViewById(R.id.progressBar1);
 
         tvName = (TextView) findViewById(R.id.tvName);
         tvAge = (TextView) findViewById(R.id.tvAge);
@@ -53,6 +54,7 @@ public class CustomerProfile extends AppCompatActivity {
         tvPhone = (TextView) findViewById(R.id.tvPhone);
         tvRegistration = (TextView) findViewById(R.id.tvRegistration);
         tvCurrentProgress = (TextView) findViewById(R.id.tvCurrentProgress);
+        tvCurrentProgress1 = (TextView) findViewById(R.id.tvCurrentProgress1);
 
         database = FirebaseDatabase.getInstance();
         mDatabaseCustomer = database.getReference("Customer");
@@ -76,6 +78,7 @@ public class CustomerProfile extends AppCompatActivity {
 
                 currentSteps = customer.getCurrentSteps();
                 target = customer.getCalorieTarget();
+
                 progress = (float) ((currentSteps*0.04)/target)*100;
                 Log.i("CurrentProgress", String.valueOf(progress));
 
@@ -159,6 +162,5 @@ public class CustomerProfile extends AppCompatActivity {
                 }
             }
         });
-
     }
 }

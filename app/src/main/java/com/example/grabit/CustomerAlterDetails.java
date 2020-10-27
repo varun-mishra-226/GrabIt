@@ -19,7 +19,7 @@ import com.google.firebase.database.ValueEventListener;
 
 public class CustomerAlterDetails extends AppCompatActivity {
 
-    EditText etName, etMobile, etAge, etHeight, etWeight, etCalorieTarget;
+    EditText etName, etMobile, etAge, etHeight, etWeight, etCalorieTarget, etCalorieTarget1;
     String name, phone, gender="";
     int age, height, weight, calorieTarget;
     Button btnMale, btnSubmit, btnFemale;
@@ -37,6 +37,7 @@ public class CustomerAlterDetails extends AppCompatActivity {
         etHeight = (EditText) findViewById(R.id.etHeight);
         etWeight = (EditText) findViewById(R.id.etWeight);
         etCalorieTarget = (EditText) findViewById(R.id.etCalorieTarget);
+        etCalorieTarget1 = (EditText) findViewById(R.id.etCalorieTarget1);
         btnMale = (Button) findViewById(R.id.btnMale);
         btnFemale = (Button) findViewById(R.id.btnFemale);
         btnSubmit = (Button) findViewById(R.id.btnSubmit);
@@ -81,6 +82,8 @@ public class CustomerAlterDetails extends AppCompatActivity {
                     mDatabase.child(username).child("gender").setValue(gender);
                 if (!etCalorieTarget.getText().toString().isEmpty())
                     mDatabase.child(username).child("calorieTarget").setValue(Integer.parseInt(etCalorieTarget.getText().toString()));
+                if (!etCalorieTarget1.getText().toString().isEmpty())
+                    mDatabase.child(username).child("calorieIntake").setValue(Integer.parseInt(etCalorieTarget1.getText().toString()));
 
                 Intent intent1 = new Intent(CustomerAlterDetails.this, CustomerProfile.class);
                 intent1.putExtra("Username", username);

@@ -112,4 +112,8 @@ public class CustomerChosenFoodItem extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    public void onBackPressed() {
+    }
 }

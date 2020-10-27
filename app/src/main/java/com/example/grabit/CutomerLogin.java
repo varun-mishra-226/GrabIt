@@ -94,4 +94,10 @@ public class CutomerLogin extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(CutomerLogin.this, InitialLogin.class);
+        startActivity(intent);
+    }
 }

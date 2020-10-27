@@ -2,14 +2,17 @@ package com.example.grabit;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -43,12 +46,13 @@ public class CustomerChosenCanteen extends AppCompatActivity
         implements SearchView.OnQueryTextListener{
 
     private static final int REQUEST_CODE_SPEECH_INPUT = 1000, REQ_FOOD_ITEM = 500;
-    TextView tvUserDetails, tvCart, tvCartQuantity, tvCartPrice;
+    TextView tvUserDetails;
     Button btnProfile, btnLogout, btnGoBack, btnContinue;
     SearchView svMenu;
     DatabaseReference mDatabaseCustomer, mDatabaseCanteen, mDatabaseOrder;
     FirebaseDatabase database;
     List<FoodItem> menu = new ArrayList<>();
+    List<FoodItem> orders = new ArrayList<>();
     ListView lvMenu;
     Hashtable<String, Integer> hm = new Hashtable<String, Integer>();
     Hashtable<String, Integer> itemPrice = new Hashtable<String, Integer>();
@@ -58,6 +62,7 @@ public class CustomerChosenCanteen extends AppCompatActivity
     int totalBill=0;
     int wallet;
     String query;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,9 +79,6 @@ public class CustomerChosenCanteen extends AppCompatActivity
         mDatabaseOrder = database.getReference("Order");
         lvMenu = (ListView) findViewById(R.id.lvMenu);
         btnMic = (ImageButton) findViewById(R.id.btnMic);
-        tvCart = (TextView) findViewById(R.id.tvCart);
-        tvCartPrice = (TextView) findViewById(R.id.tvCartPrice);
-        tvCartQuantity = (TextView) findViewById(R.id.tvCartQuantity);
         svMenu = (SearchView) findViewById(R.id.svMenu);
 
         final Intent intent = getIntent();
@@ -94,6 +96,7 @@ public class CustomerChosenCanteen extends AppCompatActivity
                 String reg = customer.getRegNo();
                 wallet = customer.getWallet();
                 tvUserDetails.setText(name + "\n" + reg + "\nWallet: " + wallet);
+                tvUserDetails.setMovementMethod(new ScrollingMovementMethod());
             }
 
             @Override
@@ -114,11 +117,6 @@ public class CustomerChosenCanteen extends AppCompatActivity
                     menu.add(foodItem);
                 }
 
-                for (int i=0; i<menu.size(); i++){
-                    Log.i("Menu Item Name", menu.get(i).getName());
-                    Log.i("Menu Calorie Name", String.valueOf(menu.get(i).getCalorie()));
-                }
-
                 foodItemListAdapter = new FoodItemListAdapter(CustomerChosenCanteen.this, menu);
                 lvMenu.setAdapter(foodItemListAdapter);
                 lvMenu.setTextFilterEnabled(true);
@@ -126,11 +124,11 @@ public class CustomerChosenCanteen extends AppCompatActivity
                 lvMenu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        Intent intent1 = new Intent(CustomerChosenCanteen.this, CustomerChosenFoodItem.class);
-                        intent1.putExtra("Username", username);
+                        Log.i("ClickPosition", String.valueOf(position));
+                        Intent intent1 = new Intent(CustomerChosenCanteen.this, FoodItemPopup.class);
                         intent1.putExtra("chosenCanteen", chosenCanteen);
                         intent1.putExtra("chosenItem", menu.get(position).getName());
-                        startActivityForResult(intent1, REQ_FOOD_ITEM);
+                        startActivity(intent1);
                     }
                 });
 
@@ -156,30 +154,42 @@ public class CustomerChosenCanteen extends AppCompatActivity
         btnContinue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                for (Map.Entry<String, Integer> entry : hm.entrySet())
-                    Log.i("HashTable" , entry.getKey() + entry.getValue());
+                new AlertDialog.Builder(CustomerChosenCanteen.this)
+                        .setTitle("Confirm Order")
+                        .setMessage("Do you want to proceed with the order...?")
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                placeOrder();
 
-                calendar = Calendar.getInstance();
-                Log.i("Time:", String.valueOf(calendar.getTimeInMillis()));
+                                for (Map.Entry<String, Integer> entry : hm.entrySet()){
+                                    if (entry.getValue()>0){
+                                        totalBill += entry.getValue()*itemPrice.get(entry.getKey());
+                                    }
+                                }
 
-                int i=1;
-                for (Map.Entry<String, Integer> entry : hm.entrySet()){
-                    if (entry.getValue()>0){
-                        mDatabaseOrder.child(username).child(String.valueOf(calendar.getTimeInMillis())).child("Item"+i).child("orderItem").setValue(entry.getKey());
-                        mDatabaseOrder.child(username).child(String.valueOf(calendar.getTimeInMillis())).child("Item"+i).child("orderQuantity").setValue(entry.getValue());
-                        i++;
-                    }
-                }
+                                calendar = Calendar.getInstance();
+                                Log.i("Time:", String.valueOf(calendar.getTimeInMillis()));
 
-                if (wallet>totalBill){
-                    mDatabaseCustomer.child(username).child("wallet").setValue(wallet-totalBill);
-                    hm.clear();
-                    tvCart.setText("");
-                    tvCartPrice.setText("");
-                    tvCartQuantity.setText("");
-                }
-
-                Toast.makeText(CustomerChosenCanteen.this, "Order successfully processed!!", Toast.LENGTH_LONG).show();
+                                if (wallet>=totalBill){
+                                    int i=1;
+                                    for (Map.Entry<String, Integer> entry : hm.entrySet()){
+                                        if (entry.getValue()>0){
+                                            mDatabaseOrder.child(username).child(String.valueOf(calendar.getTimeInMillis())).child("Item"+i).child("orderItem").setValue(entry.getKey());
+                                            mDatabaseOrder.child(username).child(String.valueOf(calendar.getTimeInMillis())).child("Item"+i).child("orderQuantity").setValue(entry.getValue());
+                                            i++;
+                                        }
+                                    }
+                                    Toast.makeText(CustomerChosenCanteen.this, "Order successfully processed!!", Toast.LENGTH_SHORT).show();
+                                    hm.clear();
+                                    mDatabaseCustomer.child(username).child("wallet").setValue(wallet-totalBill);
+                                }else{
+                                    Toast.makeText(CustomerChosenCanteen.this, "Order cannot be processed!! (Not enough CREDITS!!)", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        })
+                        .setNegativeButton("No", null)
+                        .show();
             }
         });
 
@@ -208,6 +218,16 @@ public class CustomerChosenCanteen extends AppCompatActivity
                 speak();
             }
         });
+    }
+
+    private void placeOrder() {
+        orders.clear();
+        for(int i=0; i<foodItemListAdapter.menuList.size(); i++) {
+            if(foodItemListAdapter.menuList.get(i).quantity>0){
+                hm.put(foodItemListAdapter.menuList.get(i).name, foodItemListAdapter.menuList.get(i).quantity);
+                Log.i("ItemOrdered", foodItemListAdapter.menuList.get(i).name + " " + foodItemListAdapter.menuList.get(i).quantity);
+            }
+        }
     }
 
     private void speak() {
@@ -254,9 +274,6 @@ public class CustomerChosenCanteen extends AppCompatActivity
                             totalBill += entry.getValue()*itemPrice.get(entry.getKey());
                         }
                     }
-                    tvCart.setText(cartItem);
-                    tvCartQuantity.setText(cartItemQuantity);
-                    tvCartPrice.setText(cartItemPrice);
                 }
             }
             case REQUEST_CODE_SPEECH_INPUT:{

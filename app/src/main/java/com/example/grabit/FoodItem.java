@@ -7,17 +7,22 @@ public class FoodItem {
     public int carbohydrate;
     public int fat;
     public int protein;
+    public String category;
+    public int quantity=0;
 
     public FoodItem(){
     }
 
-    public FoodItem(String name, int price, int calorie, int carbohydrate, int fat, int protein) {
+    public FoodItem(String name, int price, int calorie, int carbohydrate, int fat,
+                    int protein, String category, int quantity) {
         this.name = name;
         this.price = price;
         this.calorie = calorie;
         this.carbohydrate = carbohydrate;
         this.fat = fat;
         this.protein = protein;
+        this.category = category;
+        this.quantity = quantity;
     }
 
     public String getName() {
@@ -66,5 +71,13 @@ public class FoodItem {
 
     public void setProtein(int protein) {
         this.protein = protein;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 }

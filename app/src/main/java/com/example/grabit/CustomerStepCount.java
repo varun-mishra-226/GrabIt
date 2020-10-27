@@ -13,6 +13,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -70,6 +71,7 @@ public class CustomerStepCount extends AppCompatActivity implements SensorEventL
                 String reg = customer.getRegNo();
                 int wallet = customer.getWallet();
                 tvUserDetails.setText(name + "\n" + reg + "\nWallet: " + wallet);
+                tvUserDetails.setMovementMethod(new ScrollingMovementMethod());
                 targetSteps = (int) (customer.getCalorieTarget()/(0.04));
             }
 

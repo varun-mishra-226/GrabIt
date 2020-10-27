@@ -33,7 +33,8 @@
             android:layout_marginLeft="5dp"
             android:layout_weight="1"
             android:gravity="center_vertical"
-            android:textColor="@color/colorSecondaryText"
+            android:scrollbars="vertical"
+            android:textColor="@color/colorPrimaryText"
             android:textSize="15sp" />
 
         <Button
@@ -108,48 +109,35 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/ivFoodImageHead"
+                android:id="@+id/textView10"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
                 android:layout_weight="1"
-                app:srcCompat="@android:drawable/btn_star" />
+                android:gravity="center_horizontal|center_vertical"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/tvFoodNameHead"
+                android:id="@+id/textView12"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="2"
-                android:gravity="center_horizontal"
+                android:layout_weight="1.8"
+                android:gravity="center_horizontal|center_vertical"
                 android:text="Item Name"
                 android:textColor="@color/colorPrimaryText"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/tvCalorie"
+                android:id="@+id/textView14"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:gravity="center_horizontal"
-                android:text="Calories"
-                android:textColor="@color/colorPrimaryText"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tvPriceHead"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="2"
-                android:gravity="center_horizontal"
+                android:layout_weight="1.2"
+                android:gravity="center_horizontal|center_vertical"
                 android:text="Price"
                 android:textColor="@color/colorPrimaryText"
                 android:textSize="20sp"
                 android:textStyle="bold" />
-
         </LinearLayout>
 
         <ListView
@@ -157,57 +145,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="10dp" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/Cart"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="20dp"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/tvCartHead"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:gravity="center_horizontal"
-            android:text="My Cart"
-            android:textSize="25sp" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/tvCart"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center_horizontal"
-                android:textSize="20sp" />
-
-            <TextView
-                android:id="@+id/tvCartQuantity"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center_horizontal"
-                android:textSize="20sp" />
-
-            <TextView
-                android:id="@+id/tvCartPrice"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center_horizontal"
-                android:textSize="20sp" />
-        </LinearLayout>
 
     </LinearLayout>
 

@@ -32,12 +32,16 @@ public class InitialLogin extends AppCompatActivity {
             }
         });
 
-        btnChef.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(InitialLogin.this, EmployeeHome.class);
-                startActivity(intent);
-            }
-        });
+//        btnChef.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(InitialLogin.this, EmployeeHome.class);
+//                startActivity(intent);
+//            }
+//        });
+    }
+
+    @Override
+    public void onBackPressed() {
     }
 }

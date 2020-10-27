@@ -88,7 +88,7 @@ public class CustomerWelcomeActivity extends AppCompatActivity {
                         etAge.getText().toString().isEmpty() || etWeight.getText().toString().isEmpty() ||
                         etCalorieTarget.getText().toString().isEmpty()){
                     Toast.makeText(CustomerWelcomeActivity.this, "Please enter all fields to proceed!!",
-                            Toast.LENGTH_LONG).show();
+                            Toast.LENGTH_SHORT).show();
                 }
                 else {
                     name = etName.getText().toString().trim();
@@ -139,5 +139,11 @@ public class CustomerWelcomeActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(CustomerWelcomeActivity.this, CutomerLogin.class);
+        startActivity(intent);
     }
 }
