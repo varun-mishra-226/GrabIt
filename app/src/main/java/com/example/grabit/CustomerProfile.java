@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -29,7 +30,8 @@ public class CustomerProfile extends AppCompatActivity {
             tvGender, tvCurrentProgress, tvCurrentProgress1;
     ProgressBar progressBar, progressBar1;
     int target;
-    float currentSteps, progress, progress1;
+    float currentSteps, progress, progress1, currentIntake, calorieIntake;
+    SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +46,7 @@ public class CustomerProfile extends AppCompatActivity {
         etPrevPassword = (EditText) findViewById(R.id.etPrevPassword);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         progressBar1 = (ProgressBar) findViewById(R.id.progressBar1);
+        sharedPreferences = getPreferences(MODE_PRIVATE);
 
         tvName = (TextView) findViewById(R.id.tvName);
         tvAge = (TextView) findViewById(R.id.tvAge);
@@ -77,13 +80,28 @@ public class CustomerProfile extends AppCompatActivity {
                 tvWallet.setText("Wallet: Rs " + customer.getWallet());
 
                 currentSteps = customer.getCurrentSteps();
+//                SharedPreferences sharedPreferences = getSharedPreferences("sharedPreferences", MODE_PRIVATE);
+//                currentSteps = sharedPreferences.getInt("stepCount", 100);
+                Log.i("CurrentStepsProfile", String.valueOf(currentSteps));
+                currentIntake = customer.getCurrentCalorieTaken();
+//                currentIntake = sharedPreferences.getInt("dailyCalorieIntake", 0);
+                Log.i("CurrentIntakeProfile", String.valueOf(currentIntake));
+                calorieIntake = customer.getCalorieIntake();
                 target = customer.getCalorieTarget();
 
                 progress = (float) ((currentSteps*0.04)/target)*100;
+                progress1 = currentIntake/calorieIntake*100;
                 Log.i("CurrentProgress", String.valueOf(progress));
+                Log.i("CurrentProgress1", String.valueOf(progress1));
+                if (progress>100)
+                    progress = 100;
+                if (progress1>100)
+                    progress1 = 100;
 
                 progressBar.setProgress((int) progress);
+                progressBar1.setProgress((int) progress1);
                 tvCurrentProgress.setText(String.valueOf((int) progress) + "%");
+                tvCurrentProgress1.setText(String.valueOf((int) progress1) + "%");
             }
 
             @Override
@@ -91,6 +109,15 @@ public class CustomerProfile extends AppCompatActivity {
 
             }
         });
+
+//        progress = (float) ((currentSteps*0.04)/target)*100;
+//        progress1 = currentIntake/calorieIntake*100;
+//        Log.i("CurrentProgress", String.valueOf(progress));
+//
+//        progressBar.setProgress((int) progress);
+//        progressBar1.setProgress((int) progress1);
+//        tvCurrentProgress.setText(String.valueOf((int) progress) + "%");
+//        tvCurrentProgress1.setText(String.valueOf((int) progress1) + "%");
 
         btnHome.setOnClickListener(new View.OnClickListener() {
             @Override

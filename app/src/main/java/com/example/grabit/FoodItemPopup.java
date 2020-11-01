@@ -7,12 +7,15 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -32,26 +35,10 @@ import java.net.URL;
 public class FoodItemPopup extends Activity {
 
     ImageView ivFoodItemImage;
-    TextView tvFoodItemName, tvCalorie, tvCarbohydrate, tvFat, tvProtein;
+    TextView tvFoodItemName, tvCalorie, tvCarbohydrate, tvFat, tvProtein, tvSuggestion;
     DatabaseReference mDatabaseCanteen, mDatabaseCustomer;
     FirebaseDatabase database;
-
-    public class CartoonImage extends AsyncTask<String, Void, Bitmap> {
-        @Override
-        protected Bitmap doInBackground(String... urls) {
-            try {
-                URL url = new URL(urls[0]);
-                HttpURLConnection myConnection = (HttpURLConnection) url.openConnection();
-                myConnection.connect();
-                InputStream in = myConnection.getInputStream();
-                Bitmap myBitmap = BitmapFactory.decodeStream(in);
-                return myBitmap;
-            } catch (Exception e) {
-                e.printStackTrace();
-                return null;
-            }
-        }
-    }
+    int calorie;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,12 +51,15 @@ public class FoodItemPopup extends Activity {
         tvCarbohydrate = (TextView) findViewById(R.id.tvCarbohydrate);
         tvFat = (TextView) findViewById(R.id.tvFat);
         tvProtein = (TextView) findViewById(R.id.tvProtein);
+        tvSuggestion = (TextView) findViewById(R.id.tvCalorieLimit);
         database = FirebaseDatabase.getInstance();
         mDatabaseCustomer = database.getReference("Customer");
 
         Intent intent = getIntent();
         final String chosenCanteen = intent.getStringExtra("chosenCanteen");
         final String chosenItem = intent.getStringExtra("chosenItem");
+        final int possibleIntake = intent.getIntExtra("possibleIntake", 2000);
+        final int calorieItem = intent.getIntExtra("calorieItem", 0);
 
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
@@ -95,15 +85,25 @@ public class FoodItemPopup extends Activity {
                 int fat = foodItem.getFat();
                 int protein = foodItem.getProtein();
                 int carbohydrate = foodItem.getCarbohydrate();
-                int calorie = foodItem.getCalorie();
-                int price = foodItem.getPrice();
+                calorie = foodItem.getCalorie();
                 String name = foodItem.getName();
 
-                tvCalorie.setText("Calorie: " + calorie);
-                tvCarbohydrate.setText("Carbohydrate: " + carbohydrate);
-                tvFat.setText("Fat: " + fat);
+                tvCalorie.setText("Calorie: " + calorie + " cals");
+                tvCarbohydrate.setText("Carbohydrate: " + carbohydrate + " grams");
+                tvFat.setText("Fat: " + fat + " grams");
                 tvFoodItemName.setText(name);
-                tvProtein.setText("Protein: " + protein);
+                tvProtein.setText("Protein: " + protein + " grams");
+
+                String imgName = name;
+                imgName = imgName.replaceAll("\\s", "_");
+                imgName = imgName.toLowerCase();
+
+                Log.i("ImageName", imgName);
+
+                String uri = "@drawable/" + imgName;
+                int imageResource = getResources().getIdentifier(uri, null, getPackageName());
+                Drawable res = getResources().getDrawable(imageResource);
+                ivFoodItemImage.setImageDrawable(res);
             }
 
             @Override
@@ -111,5 +111,10 @@ public class FoodItemPopup extends Activity {
 
             }
         });
+
+        if (possibleIntake<calorieItem) {
+            tvSuggestion.setVisibility(View.VISIBLE);
+            tvSuggestion.setText("Exceeding Calorie Target!!");
+        }
     }
 }

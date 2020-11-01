@@ -3,6 +3,9 @@ package com.example.grabit;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
@@ -23,6 +26,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.lang.reflect.Array;
 import java.net.Inet4Address;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class CustomerHome extends AppCompatActivity {
@@ -38,6 +42,8 @@ public class CustomerHome extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_home);
+
+        schedAlarm(this);
 
         tvUserDetails = (TextView) findViewById(R.id.tvUserDetails);
         btnLogout = (Button) findViewById(R.id.btnLogout);
@@ -60,7 +66,6 @@ public class CustomerHome extends AppCompatActivity {
                 String reg = customer.getRegNo();
                 int wallet = customer.getWallet();
                 tvUserDetails.setText(name + "\n" + reg + "\nWallet: " + wallet);
-                tvUserDetails.setMovementMethod(new ScrollingMovementMethod());
             }
 
             @Override
@@ -139,5 +144,19 @@ public class CustomerHome extends AppCompatActivity {
     @Override
     public void onBackPressed() {
 
+    }
+
+    private void schedAlarm(Context context) {
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.HOUR_OF_DAY, 18);
+        cal.set(Calendar.MINUTE, 49);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        cal.add(Calendar.DAY_OF_MONTH, 1);
+        PendingIntent pi = PendingIntent.getBroadcast(context, 0,
+                new Intent(context, YourBroadcastReceiver.class),
+                PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        am.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), 1000*60*60*24, pi);
     }
 }

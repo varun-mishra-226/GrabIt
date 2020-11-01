@@ -1,6 +1,8 @@
 package com.example.grabit;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +19,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
@@ -25,14 +33,16 @@ import java.util.List;
 public class FoodItemListAdapter extends BaseAdapter implements Filterable {
     Context context;
     List<FoodItem> menuList, filterMenuList;
-    int menuListSize;
+    int menuListSize, targetIntake, currentIntake;
 
-    public FoodItemListAdapter(Context context, List<FoodItem> menuList){
+    public FoodItemListAdapter(Context context, List<FoodItem> menuList, int targetIntake, int currentIntake){
         super();
 
         this.context = context;
         this.menuList = menuList;
         this.menuListSize = menuList.size();
+        this.targetIntake = targetIntake;
+        this.currentIntake = currentIntake;
     }
 
     public class FoodItemHolder{
@@ -63,7 +73,6 @@ public class FoodItemListAdapter extends BaseAdapter implements Filterable {
                                 results.add(f);
                         }
                     }
-                    filterResults.values = results;
                 }
                 else{
                     if (filterMenuList!=null && filterMenuList.size()>0){
@@ -71,8 +80,8 @@ public class FoodItemListAdapter extends BaseAdapter implements Filterable {
                             results.add(f);
                         }
                     }
-                    filterResults.values = results;
                 }
+                filterResults.values = results;
                 return filterResults;
             }
 
@@ -108,6 +117,7 @@ public class FoodItemListAdapter extends BaseAdapter implements Filterable {
     @Override
     public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         final FoodItemHolder holder;
+
         if (convertView==null){
             convertView = LayoutInflater.from(context)
                     .inflate(R.layout.menu_food_item, parent, false);
@@ -129,6 +139,7 @@ public class FoodItemListAdapter extends BaseAdapter implements Filterable {
         holder.price.setText(String.valueOf(menuList.get(position).getPrice()));
         holder.calorie.setText("Calories: " + String.valueOf(menuList.get(position).getCalorie()));
         holder.holderQuantity.setText(menuList.get(position).quantity + "");
+
         if (menuList.get(position).getCategory().equals("Beverages")){
             holder.category.setImageResource(R.drawable.beverage_new);
         }
@@ -150,19 +161,6 @@ public class FoodItemListAdapter extends BaseAdapter implements Filterable {
                 updateQuantity(position, holder.holderQuantity, -1);
             }
         });
-
-        /*LayoutInflater layoutInflater = LayoutInflater.from(context);
-        View view = layoutInflater.inflate(R.layout.menu_food_item, null);
-
-        TextView tvCalorie = view.findViewById(R.id.tvCalorie);
-        TextView tvPrice = view.findViewById(R.id.tvPrice);
-        TextView tvFoodName = view.findViewById(R.id.tvFoodName);
-
-        FoodItem foodItem = menuList.get(position);
-
-        tvFoodName.setText(foodItem.getName());
-        tvPrice.setText(String.valueOf(foodItem.getPrice()));
-        tvCalorie.setText(String.valueOf(foodItem.getCalorie()));*/
 
         return convertView;
     }

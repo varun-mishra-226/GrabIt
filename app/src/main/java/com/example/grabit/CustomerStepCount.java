@@ -13,6 +13,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
@@ -62,6 +63,8 @@ public class CustomerStepCount extends AppCompatActivity implements SensorEventL
 
         Intent intent = getIntent();
         username = intent.getStringExtra("Username");
+
+        schedAlarm(this);
 
         mDatabaseCustomer.addValueEventListener(new ValueEventListener() {
             @Override
@@ -128,34 +131,11 @@ public class CustomerStepCount extends AppCompatActivity implements SensorEventL
                     tvCurrentSteps.setText(stepCount.toString() + "\n" + "STEPS");
                     int res = (targetSteps-stepCount);
                     tvStepsLeft.setText( res + " STEPS TO GO");
-                    //progress = stepCount/targetSteps * 100;
-                    //progressBar.setProgress(progress);
-                    /*if (targetSteps==0)
-                        mDatabaseCustomer.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                Customer customer = snapshot.child(username).getValue(Customer.class);
-                                targetSteps = (int) (customer.getCalorieTarget()/(0.04));
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-
-                            }
-                        });
-                    else {
-                        Log.i("TargetSteps", String.valueOf(targetSteps));
-                        Log.i("CurrentSteps", String.valueOf(stepCount));
-                        progress = stepCount/targetSteps * 100;
-                        Log.i("Progress", String.valueOf(progress));
-                        progressBar.setProgress(progress);
-                    }*/
                 }
             }
 
             @Override
             public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
             }
         };
 
@@ -173,7 +153,9 @@ public class CustomerStepCount extends AppCompatActivity implements SensorEventL
         cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MILLISECOND, 0);
         cal.add(Calendar.DAY_OF_MONTH, 1);
-        PendingIntent pi = PendingIntent.getBroadcast(context, 0, new Intent(context, YourBroadcastReceiver.class), PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pi = PendingIntent.getBroadcast(context, 0,
+                new Intent(context, YourBroadcastReceiver.class),
+                PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         am.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), 1000*60*60*24, pi);
     }
@@ -183,9 +165,8 @@ public class CustomerStepCount extends AppCompatActivity implements SensorEventL
         super.onResume();
         SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
         stepCount = sharedPreferences.getInt("stepCount", 0);
-        //targetSteps = sharedPreferences.getInt("targetSteps", 0);
+        Log.i("CurrentStepsOnResume", String.valueOf(stepCount));
         updateValue(stepCount);
-        //updateValue(targetSteps);
     }
 
     @Override
@@ -195,10 +176,9 @@ public class CustomerStepCount extends AppCompatActivity implements SensorEventL
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.clear();
         editor.putInt("stepCount", stepCount);
-        //editor.putInt("targetSteps", targetSteps);
         editor.apply();
+        Log.i("CurrentStepsOnPause", String.valueOf(stepCount));
         updateValue(stepCount);
-        //updateValue(targetSteps);
     }
 
     @Override
@@ -208,10 +188,9 @@ public class CustomerStepCount extends AppCompatActivity implements SensorEventL
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.clear();
         editor.putInt("stepCount", stepCount);
-        //editor.putInt("targetSteps", targetSteps);
         editor.apply();
+        Log.i("CurrentStepsOnStop", String.valueOf(stepCount));
         updateValue(stepCount);
-        //updateValue(targetSteps);
     }
 
     @Override
@@ -222,5 +201,17 @@ public class CustomerStepCount extends AppCompatActivity implements SensorEventL
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
+    }
+
+    public static void setDefaults(String key, String value, Context context) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(key, value);
+        editor.commit();
+    }
+
+    public static String getDefaults(String key, Context context) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return preferences.getString(key, null);
     }
 }

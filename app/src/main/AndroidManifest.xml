@@ -28,6 +28,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".MainActivity" />
+        <receiver android:name=".YourBroadcastReceiver"
+            android:enabled="true"
+            android:exported="true"/>
     </application>
     <uses-permission android:name="android.permission.INTERNET" />
 

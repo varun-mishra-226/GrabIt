@@ -12,7 +12,7 @@ public class Customer {
     public int height;
     public int weight;
     public int currentSteps;
-    public int currentIntake;
+    public int calorieIntake;
     public int currentCalorieTaken;
 
     public Customer() {
@@ -20,7 +20,7 @@ public class Customer {
 
     public Customer(String name, String regNo, String password, int wallet, int age,
                     int calorieTarget, String gender, String phone, int height,
-                    int weight, int currentSteps, int currentIntake, int currentCalorieTaken) {
+                    int weight, int currentSteps, int calorieIntake, int currentCalorieTaken) {
         this.name = name;
         this.regNo = regNo;
         this.password = password;
@@ -32,7 +32,7 @@ public class Customer {
         this.height = height;
         this.weight = weight;
         this.currentSteps = currentSteps;
-        this.currentIntake = currentIntake;
+        this.calorieIntake = calorieIntake;
         this.currentCalorieTaken = currentCalorieTaken;
     }
 
@@ -124,12 +124,12 @@ public class Customer {
         this.currentSteps = currentSteps;
     }
 
-    public int getCurrentIntake() {
-        return currentIntake;
+    public int getCalorieIntake() {
+        return calorieIntake;
     }
 
-    public void setCurrentIntake(int currentIntake) {
-        this.currentIntake = currentIntake;
+    public void setCalorieIntake(int calorieIntake) {
+        this.calorieIntake = calorieIntake;
     }
 
     public int getCurrentCalorieTaken() {

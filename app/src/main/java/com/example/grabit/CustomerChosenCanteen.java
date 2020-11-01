@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.text.Editable;
@@ -56,13 +57,14 @@ public class CustomerChosenCanteen extends AppCompatActivity
     ListView lvMenu;
     Hashtable<String, Integer> hm = new Hashtable<String, Integer>();
     Hashtable<String, Integer> itemPrice = new Hashtable<String, Integer>();
+    Hashtable<String, Integer> calorieContent = new Hashtable<String, Integer>();
     ImageButton btnMic;
     FoodItemListAdapter foodItemListAdapter;
     Calendar calendar;
-    int totalBill=0;
+    int totalBill=0, totalIntake=0, currentIntake=0, targetIntake;
     int wallet;
     String query;
-
+    SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +82,7 @@ public class CustomerChosenCanteen extends AppCompatActivity
         lvMenu = (ListView) findViewById(R.id.lvMenu);
         btnMic = (ImageButton) findViewById(R.id.btnMic);
         svMenu = (SearchView) findViewById(R.id.svMenu);
+        sharedPreferences = getPreferences(MODE_PRIVATE);
 
         final Intent intent = getIntent();
         final String username = intent.getStringExtra("Username");
@@ -95,6 +98,8 @@ public class CustomerChosenCanteen extends AppCompatActivity
                 String name = customer.getName();
                 String reg = customer.getRegNo();
                 wallet = customer.getWallet();
+                currentIntake = customer.getCurrentCalorieTaken();
+                targetIntake = customer.getCalorieIntake();
                 tvUserDetails.setText(name + "\n" + reg + "\nWallet: " + wallet);
                 tvUserDetails.setMovementMethod(new ScrollingMovementMethod());
             }
@@ -103,6 +108,7 @@ public class CustomerChosenCanteen extends AppCompatActivity
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
+
         });
 
         mDatabaseCanteen.addValueEventListener(new ValueEventListener() {
@@ -114,10 +120,11 @@ public class CustomerChosenCanteen extends AppCompatActivity
                     keys.add(keyNode.getKey());
                     FoodItem foodItem = keyNode.getValue(FoodItem.class);
                     itemPrice.put(foodItem.getName(), foodItem.getPrice());
+                    calorieContent.put(foodItem.getName(), foodItem.getCalorie());
                     menu.add(foodItem);
                 }
 
-                foodItemListAdapter = new FoodItemListAdapter(CustomerChosenCanteen.this, menu);
+                foodItemListAdapter = new FoodItemListAdapter(CustomerChosenCanteen.this, menu, targetIntake, currentIntake);
                 lvMenu.setAdapter(foodItemListAdapter);
                 lvMenu.setTextFilterEnabled(true);
 
@@ -128,6 +135,8 @@ public class CustomerChosenCanteen extends AppCompatActivity
                         Intent intent1 = new Intent(CustomerChosenCanteen.this, FoodItemPopup.class);
                         intent1.putExtra("chosenCanteen", chosenCanteen);
                         intent1.putExtra("chosenItem", menu.get(position).getName());
+                        intent1.putExtra("possibleIntake", targetIntake-currentIntake);
+                        intent1.putExtra("calorieItem", menu.get(position).getCalorie());
                         startActivity(intent1);
                     }
                 });
@@ -165,6 +174,7 @@ public class CustomerChosenCanteen extends AppCompatActivity
                                 for (Map.Entry<String, Integer> entry : hm.entrySet()){
                                     if (entry.getValue()>0){
                                         totalBill += entry.getValue()*itemPrice.get(entry.getKey());
+                                        totalIntake += entry.getValue()*calorieContent.get(entry.getKey());
                                     }
                                 }
 
@@ -172,6 +182,7 @@ public class CustomerChosenCanteen extends AppCompatActivity
                                 Log.i("Time:", String.valueOf(calendar.getTimeInMillis()));
 
                                 if (wallet>=totalBill){
+                                    mDatabaseCustomer.child(username).child("currentCalorieTaken").setValue(totalIntake+currentIntake);
                                     int i=1;
                                     for (Map.Entry<String, Integer> entry : hm.entrySet()){
                                         if (entry.getValue()>0){
