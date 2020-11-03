@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
@@ -19,12 +21,15 @@ import com.google.firebase.database.ValueEventListener;
 
 public class CustomerWelcomeActivity extends AppCompatActivity {
 
-    EditText etName, etMobile, etAge, etHeight, etWeight, etCalorieTarget;
+    EditText etName, etMobile, etAge, etHeight, etWeight, etCalorieTarget, etCalorieTarget1;
     String name, phone, gender="";
-    int age, height, weight, calorieTarget;
+    int age, height, weight, calorieTarget, calorieIntake;
     Button btnMale, btnSubmit, btnFemale;
     DatabaseReference mDatabase;
     FirebaseDatabase database;
+    boolean click = false;
+    RadioGroup rgGender;
+    RadioButton rbGender;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,9 +42,12 @@ public class CustomerWelcomeActivity extends AppCompatActivity {
         etHeight = (EditText) findViewById(R.id.etHeight);
         etWeight = (EditText) findViewById(R.id.etWeight);
         etCalorieTarget = (EditText) findViewById(R.id.etCalorieTarget);
-        btnMale = (Button) findViewById(R.id.btnMale);
-        btnFemale = (Button) findViewById(R.id.btnFemale);
+        etCalorieTarget1 = (EditText) findViewById(R.id.etCalorieTarget1);
+//        btnMale = (Button) findViewById(R.id.btnMale);
+//        btnFemale = (Button) findViewById(R.id.btnFemale);
         btnSubmit = (Button) findViewById(R.id.btnSubmit);
+        rgGender = (RadioGroup) findViewById(R.id.rgGender);
+
 
         database = FirebaseDatabase.getInstance();
         mDatabase = database.getReference("Customer");
@@ -64,21 +72,27 @@ public class CustomerWelcomeActivity extends AppCompatActivity {
             }
         });
 
-        btnMale.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                gender = "Male";
-                btnMale.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-            }
-        });
-
-        btnFemale.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                gender = "Female";
-                btnFemale.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-            }
-        });
+//        btnMale.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (!click) {
+//                    click = true;
+//                    gender = "Male";
+//                    btnMale.setBackgroundResource(R.drawable.button_highlight_layout);
+//                }
+//            }
+//        });
+//
+//        btnFemale.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (!click) {
+//                    click = true;
+//                    gender = "Female";
+//                    btnFemale.setBackgroundResource(R.drawable.button_highlight_layout);
+//                }
+//            }
+//        });
 
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,7 +100,7 @@ public class CustomerWelcomeActivity extends AppCompatActivity {
                 if (etName.getText().toString().trim().isEmpty() || etMobile.getText().toString().trim().isEmpty() ||
                         gender.isEmpty() || etHeight.getText().toString().isEmpty() ||
                         etAge.getText().toString().isEmpty() || etWeight.getText().toString().isEmpty() ||
-                        etCalorieTarget.getText().toString().isEmpty()){
+                        etCalorieTarget.getText().toString().isEmpty() || etCalorieTarget1.getText().toString().isEmpty()){
                     Toast.makeText(CustomerWelcomeActivity.this, "Please enter all fields to proceed!!",
                             Toast.LENGTH_SHORT).show();
                 }
@@ -97,14 +111,7 @@ public class CustomerWelcomeActivity extends AppCompatActivity {
                     weight = Integer.parseInt(etWeight.getText().toString());
                     age = Integer.parseInt(etAge.getText().toString());
                     calorieTarget = Integer.parseInt(etCalorieTarget.getText().toString());
-
-                    Log.i("Name", name);
-                    Log.i("Phone", phone);
-                    Log.i("Height", String.valueOf(height));
-                    Log.i("Weight", String.valueOf(weight));
-                    Log.i("Gender", gender);
-                    Log.i("Age", String.valueOf(age));
-                    Log.i("Calorie Target", String.valueOf(calorieTarget));
+                    calorieIntake = Integer.parseInt(etCalorieTarget1.getText().toString());
 
                     mDatabase.addValueEventListener(new ValueEventListener() {
                         @Override
@@ -113,7 +120,6 @@ public class CustomerWelcomeActivity extends AppCompatActivity {
                                 Intent intent1 = new Intent(CustomerWelcomeActivity.this, CustomerHome.class);
                                 intent1.putExtra("Username", username);
                                 startActivity(intent1);
-                                finish();
                             }
                             else{
                                 mDatabase.child(username).child("name").setValue(name);
@@ -123,12 +129,13 @@ public class CustomerWelcomeActivity extends AppCompatActivity {
                                 mDatabase.child(username).child("age").setValue(age);
                                 mDatabase.child(username).child("gender").setValue(gender);
                                 mDatabase.child(username).child("calorieTarget").setValue(calorieTarget);
+                                mDatabase.child(username).child("calorieIntake").setValue(calorieIntake);
 
                                 Intent intent1 = new Intent(CustomerWelcomeActivity.this, CustomerHome.class);
                                 intent1.putExtra("Username", username);
                                 startActivity(intent1);
-                                finish();
                             }
+                            finish();
                         }
 
                         @Override
@@ -145,5 +152,11 @@ public class CustomerWelcomeActivity extends AppCompatActivity {
     public void onBackPressed() {
         Intent intent = new Intent(CustomerWelcomeActivity.this, CutomerLogin.class);
         startActivity(intent);
+    }
+
+    public void genderSelect(View view) {
+        int radioId = rgGender.getCheckedRadioButtonId();
+        rbGender = findViewById(radioId);
+        gender = (String) rbGender.getText();
     }
 }

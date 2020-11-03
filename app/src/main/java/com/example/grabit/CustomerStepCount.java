@@ -93,15 +93,6 @@ public class CustomerStepCount extends AppCompatActivity implements SensorEventL
             }
         });
 
-        btnProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent1 = new Intent(CustomerStepCount.this, CustomerProfile.class);
-                intent1.putExtra("Username", username);
-                startActivity(intent1);
-            }
-        });
-
         btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -128,6 +119,7 @@ public class CustomerStepCount extends AppCompatActivity implements SensorEventL
                     if (magnitudeDelta > 8 ){
                         stepCount++;
                     }
+
                     tvCurrentSteps.setText(stepCount.toString() + "\n" + "STEPS");
                     int res = (targetSteps-stepCount);
                     tvStepsLeft.setText( res + " STEPS TO GO");
