@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
@@ -25,6 +27,8 @@ public class CustomerAlterDetails extends AppCompatActivity {
     Button btnMale, btnSubmit, btnFemale;
     DatabaseReference mDatabase;
     FirebaseDatabase database;
+    RadioGroup rgGender;
+    RadioButton rbGender;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,9 +42,10 @@ public class CustomerAlterDetails extends AppCompatActivity {
         etWeight = (EditText) findViewById(R.id.etWeight);
         etCalorieTarget = (EditText) findViewById(R.id.etCalorieTarget);
         etCalorieTarget1 = (EditText) findViewById(R.id.etCalorieTarget1);
-        btnMale = (Button) findViewById(R.id.btnMale);
-        btnFemale = (Button) findViewById(R.id.btnFemale);
+        //btnMale = (Button) findViewById(R.id.btnMale);
+        //btnFemale = (Button) findViewById(R.id.btnFemale);
         btnSubmit = (Button) findViewById(R.id.btnSubmit);
+        rgGender = (RadioGroup) findViewById(R.id.rgGender);
 
         database = FirebaseDatabase.getInstance();
         mDatabase = database.getReference("Customer");
@@ -48,21 +53,21 @@ public class CustomerAlterDetails extends AppCompatActivity {
         final Intent intent = getIntent();
         final String username = intent.getStringExtra("Username");
 
-        btnMale.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                gender = "Male";
-                btnMale.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-            }
-        });
-
-        btnFemale.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                gender = "Female";
-                btnFemale.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-            }
-        });
+//        btnMale.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                gender = "Male";
+//                btnMale.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+//            }
+//        });
+//
+//        btnFemale.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                gender = "Female";
+//                btnFemale.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+//            }
+//        });
 
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,5 +95,11 @@ public class CustomerAlterDetails extends AppCompatActivity {
                 startActivity(intent1);
             }
         });
+    }
+
+    public void genderSelect(View view) {
+        int radioId = rgGender.getCheckedRadioButtonId();
+        rbGender = findViewById(radioId);
+        gender = (String) rbGender.getText();
     }
 }
