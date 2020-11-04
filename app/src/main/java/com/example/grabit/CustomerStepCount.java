@@ -122,7 +122,9 @@ public class CustomerStepCount extends AppCompatActivity implements SensorEventL
 
                     tvCurrentSteps.setText(stepCount.toString() + "\n" + "STEPS");
                     int res = (targetSteps-stepCount);
-                    tvStepsLeft.setText( res + " STEPS TO GO");
+                    tvStepsLeft.setText(res + " STEPS TO GO");
+
+                    progressBar.setProgress((int) ((float)stepCount/targetSteps*100));
                 }
             }
 
@@ -157,8 +159,9 @@ public class CustomerStepCount extends AppCompatActivity implements SensorEventL
         super.onResume();
         SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
         stepCount = sharedPreferences.getInt("stepCount", 0);
+        //stepCount = 2000;
         Log.i("CurrentStepsOnResume", String.valueOf(stepCount));
-        updateValue(stepCount);
+        //updateValue(stepCount);
     }
 
     @Override
@@ -170,7 +173,7 @@ public class CustomerStepCount extends AppCompatActivity implements SensorEventL
         editor.putInt("stepCount", stepCount);
         editor.apply();
         Log.i("CurrentStepsOnPause", String.valueOf(stepCount));
-        updateValue(stepCount);
+        //updateValue(stepCount);
     }
 
     @Override

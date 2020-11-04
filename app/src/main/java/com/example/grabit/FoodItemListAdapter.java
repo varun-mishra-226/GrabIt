@@ -164,6 +164,7 @@ public class FoodItemListAdapter extends BaseAdapter implements Filterable {
 
         return convertView;
     }
+
     private void updateQuantity(int position, EditText edTextQuantity, int value) {
         FoodItem products = (FoodItem) getItem(position);
         if(value > 0){

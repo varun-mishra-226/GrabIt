@@ -194,7 +194,8 @@ public class CustomerChosenCanteen extends AppCompatActivity
                                     Toast.makeText(CustomerChosenCanteen.this, "Order successfully processed!!", Toast.LENGTH_SHORT).show();
                                     hm.clear();
                                     mDatabaseCustomer.child(username).child("wallet").setValue(wallet-totalBill);
-                                }else{
+                                }
+                                else{
                                     Toast.makeText(CustomerChosenCanteen.this, "Order cannot be processed!! (Not enough CREDITS!!)", Toast.LENGTH_SHORT).show();
                                 }
                             }

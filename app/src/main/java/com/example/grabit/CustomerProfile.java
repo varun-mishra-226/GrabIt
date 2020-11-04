@@ -27,7 +27,7 @@ public class CustomerProfile extends AppCompatActivity {
     DatabaseReference mDatabaseCustomer;
     FirebaseDatabase database;
     TextView tvName, tvRegistration, tvPhone, tvWallet, tvAge, tvHeight, tvWeight,
-            tvGender, tvCurrentProgress, tvCurrentProgress1;
+            tvGender, tvCurrentProgress, tvCurrentProgress1, tvBurnTargetRatio, tvIntakeTargetRatio;
     ProgressBar progressBar, progressBar1;
     int target;
     float currentSteps, progress, progress1, currentIntake, calorieIntake;
@@ -58,6 +58,8 @@ public class CustomerProfile extends AppCompatActivity {
         tvRegistration = (TextView) findViewById(R.id.tvRegistration);
         tvCurrentProgress = (TextView) findViewById(R.id.tvCurrentProgress);
         tvCurrentProgress1 = (TextView) findViewById(R.id.tvCurrentProgress1);
+        tvBurnTargetRatio = (TextView) findViewById(R.id.tvBurnTargetRatio);
+        tvIntakeTargetRatio = (TextView) findViewById(R.id.tvIntakeTargetRatio);
 
         database = FirebaseDatabase.getInstance();
         mDatabaseCustomer = database.getReference("Customer");
@@ -102,6 +104,11 @@ public class CustomerProfile extends AppCompatActivity {
                 progressBar1.setProgress((int) progress1);
                 tvCurrentProgress.setText(String.valueOf((int) progress) + "%");
                 tvCurrentProgress1.setText(String.valueOf((int) progress1) + "%");
+
+                int cS = (int) (currentSteps*0.04), t = target, cI = (int) currentIntake, caI = (int) calorieIntake;
+
+                tvBurnTargetRatio.setText(cS + "/" + t + " cal");
+                tvIntakeTargetRatio.setText(cI + "/" + caI + " cal");
             }
 
             @Override
